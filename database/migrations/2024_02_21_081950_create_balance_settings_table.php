@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('recharge_histories', function (Blueprint $table) {
+        Schema::create('balance_settings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained();
-            $table->integer('amount');
-            $table->integer('current_balance');
-            $table->integer('updated_balance');
+            $table->integer('daily_limit');
+            $table->integer('max_limit');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recharge_histories');
+        Schema::dropIfExists('balance_settings');
     }
 };

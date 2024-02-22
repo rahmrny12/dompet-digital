@@ -152,6 +152,12 @@ class StudentController extends Controller
         return response()->json($students);
     }
 
+    public function getBalanceSetting($id)
+    {
+        $student = Student::with(['balance', 'balance_setting'])->find($id)->first();
+        return response()->json($student);
+    }
+
     public function getStudentsByClassroom($id)
     {
         $students = Student::with('balance')->where('classroom_id', $id)->get();

@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/students/{id}/json', [StudentController::class, 'getEdit']);
     Route::get('/classrooms/{id}/students', [StudentController::class, 'getStudentsByClassroom']);
+    Route::get('/students/{id}/setting', [StudentController::class, 'getBalanceSetting']);
 
     /* --- */
     Route::resource('/teachers', TeacherController::class);

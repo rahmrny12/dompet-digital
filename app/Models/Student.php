@@ -19,4 +19,9 @@ class Student extends Model
     {
         return $this->hasOne(StudentBalance::class);
     }
+
+    public function balance_setting()
+    {
+        return $this->hasOne(BalanceSetting::class);
+    }
 }
