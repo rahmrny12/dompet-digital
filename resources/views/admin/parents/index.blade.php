@@ -1,7 +1,7 @@
 @extends('template_backend.home')
-@section('heading', 'Data Wali Kelas')
+@section('heading', 'Data Wali Murid')
 @section('page')
-    <li class="breadcrumb-item active">Data Wali Kelas</li>
+    <li class="breadcrumb-item active">Data Wali Murid</li>
 @endsection
 @section('content')
     <div class="col-md-12">
@@ -9,8 +9,8 @@
             <div class="card-header">
                 <h3 class="card-title">
                     <button type="button" class="btn btn-primary btn-sm" onclick="getCreate()" data-toggle="modal"
-                        data-target="#form-teachers">
-                        <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Tambah Data Wali Kelas
+                        data-target="#form-parents">
+                        <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Tambah Data Wali Murid
                     </button>
                 </h3>
             </div>
@@ -20,30 +20,22 @@
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>NIP</th>
-                            <th>Nama Wali Kelas</th>
-                            <th>Email</th>
-                            <th>Jenis Kelamin</th>
-                            <th>Nomor Telepon</th>
+                            <th>Nama Wali Murid</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($teachers as $key => $data)
+                        @foreach ($parents as $key => $data)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $data->nip }}</td>
                                 <td>{{ $data->name }}</td>
-                                <td>{{ $data->email }}</td>
-                                <td>{{ $data->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                                <td>{{ $data->phone }}</td>
                                 <td>
-                                    <form action="{{ route('teachers.destroy', $data->id) }}" method="post">
+                                    <form action="{{ route('parents.destroy', $data->id) }}" method="post">
                                         @csrf
                                         @method('delete')
                                         <button type="button" class="btn btn-success btn-sm"
                                             onclick="getEdit({{ $data->id }})" data-toggle="modal"
-                                            data-target="#form-teachers">
+                                            data-target="#form-parents">
                                             <i class="nav-icon fas fa-edit"></i> &nbsp; Edit
                                         </button>
                                         <button class="btn btn-danger btn-sm"><i class="nav-icon fas fa-trash-alt"></i>
@@ -62,7 +54,7 @@
     <!-- /.col -->
 
     <!-- Extra large modal -->
-    <div class="modal fade bd-example-modal-md" id="form-teachers" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-md" id="form-parents" tabindex="-1" role="dialog"
         aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
@@ -73,22 +65,16 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('teachers.store') }}" method="post">
+                    <form action="{{ route('parents.store') }}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="hidden" id="id" name="id">
-                                <div class="form-group" id="form_nip">
-                                    <label for="nip">NIP</label>
-                                    <input type='text' id="nip" name='nip'
-                                        class="form-control @error('nip') is-invalid @enderror"
-                                        placeholder="{{ __('NIP') }}">
-                                </div>
                                 <div class="form-group" id="form_name">
-                                    <label for="name">Nama Wali Kelas</label>
+                                    <label for="name">Nama Wali Murid</label>
                                     <input type='text' id="name" name='name'
                                         class="form-control @error('name') is-invalid @enderror"
-                                        placeholder="{{ __('Nama Wali Kelas') }}">
+                                        placeholder="{{ __('Nama Wali Murid') }}">
                                 </div>
                                 <div class="form-group" id="form_email">
                                     <label for="email">Email</label>
@@ -96,19 +82,21 @@
                                         class="form-control @error('email') is-invalid @enderror"
                                         placeholder="{{ __('Email') }}">
                                 </div>
-                                <div class="form-group">
-                                    <label for="gender">Jenis Kelamin</label>
-                                    <select id="gender" name="gender" class="form-control @error('gender') is-invalid @enderror">
-                                        <option value="">-- Pilih Jenis Kelamin --</option>
-                                        <option value="L">Laki-laki</option>
-                                        <option value="P">Perempuan</option>
-                                    </select>
-                                  </div>
                                 <div class="form-group" id="form_phone">
                                     <label for="phone">Nomor Telepon</label>
                                     <input type='text' id="phone" name='phone'
                                         class="form-control @error('phone') is-invalid @enderror"
                                         placeholder="{{ __('Nomor Telepon') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="student_id">Siswa</label>
+                                    <select id="student_id" name="student_id[]"
+                                        class="select2bs4 form-control @error('student_id') is-invalid @enderror" multiple>
+                                        <option value="">-- Pilih Siswa --</option>
+                                        @foreach ($students as $data)
+                                            <option value="{{ $data->id }}">{{ $data->name }} - {{ $data->classroom->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -129,29 +117,29 @@
 @section('script')
     <script>
         function getCreate() {
-            $("#judul").text('Tambah Data Wali Kelas');
+            $("#judul").text('Tambah Data Wali Murid');
             $('#id').val('');
-            $('#nip').val('');
+            $('#nisn').val('');
             $('#name').val('');
-            $('#email').val('');
-            $('#gender').val('');
-            $('#phone').val('');
+            $('#classroom_id').val('');
         }
 
         function getEdit(id) {
             $.ajax({
                 type: "GET",
                 dataType: "JSON",
-                url: `{{ url('/teachers/${id}/json') }}`,
+                url: `{{ url('/parents/${id}/json') }}`,
                 success: function(result) {
                     if (result) {
-                        $("#judul").text('Edit Data Wali Kelas ' + result.name);
-                        $('#id').val(result.id);
-                        $('#nip').val(result.nip);
-                        $('#name').val(result.name);
-                        $('#email').val(result.email);
-                        $('#gender').val(result.gender);
-                        $('#phone').val(result.phone);
+                        // $(`#student_id`).val([1]).trigger('change');
+                        $("#judul").text('Edit Data Wali Murid ' + result.name);
+                        $("#id").val(result.id)
+                        $("#name").val(result.name)
+                        $("#email").val(result.email)
+                        $("#phone").val(result.phone)
+                        $.each(result.students, function(index, el){
+                            $(`#student_id option[value=${el.id}]`).attr('selected','selected').trigger('change');
+                        });
                     }
                 },
                 error: function() {
@@ -163,6 +151,6 @@
 
         $("#MasterData").addClass("active");
         $("#liMasterData").addClass("menu-open");
-        $("#DataTeachers").addClass("active");
+        $("#DataParents").addClass("active");
     </script>
 @endsection

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('recharge_histories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained();
             $table->foreignId('student_id')->constrained();
             $table->integer('amount');
             $table->integer('current_balance');

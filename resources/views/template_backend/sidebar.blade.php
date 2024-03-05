@@ -2,7 +2,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="" class="brand-link" style="">
-        <img src="{{ asset('img/favicon.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
         <span class="brand-text font-weight-light">Dompet Digital</span>
     </a>
 
@@ -36,6 +35,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('parents.index') }}" class="nav-link" id="DataParents">
+                                    <i class="fas fa-user nav-icon"></i>
+                                    <p>Wali Murid</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('teachers.index') }}" class="nav-link" id="DataTeachers">
                                     <i class="fas fa-users nav-icon"></i>
                                     <p>Wali Kelas</p>
@@ -60,6 +65,12 @@
                         <a href="{{ route('transactions.classrooms') }}" class="nav-link" id="TransactionHistory">
                             <i class="nav-icon fas fa-money-check"></i>
                             <p>Histori Belanja Siswa</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('settings') }}" class="nav-link" id="Settings">
+                            <i class="nav-icon fas fa-cog"></i>
+                            <p>Pengaturan</p>
                         </a>
                     </li>
                 @endif

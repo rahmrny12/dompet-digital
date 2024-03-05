@@ -41,6 +41,8 @@
 
 @section('script')
   <script>
-    $("#TransactionHistory").addClass("active");
+    $("#MasterData").addClass("active");
+    $("#liMasterData").addClass("menu-open");
+    $("#DataStudents").addClass("active");
   </script>
 @endsection

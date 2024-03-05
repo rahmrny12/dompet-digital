@@ -126,6 +126,6 @@
 
             $("#MasterData").addClass("active");
             $("#liMasterData").addClass("menu-open");
-            $("#DataStudents").addClass("active");
+            $("#DataParents").addClass("active");
         </script>
     @endsection

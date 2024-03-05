@@ -23,77 +23,12 @@ class TransactionController extends Controller
     public function index($id)
     {
         $classroom = Classroom::find($id)->first();
-        $transactions = Transaction::select( 'students.nisn', 'students.name', 'transactions.total_payment', 'transactions.note')
+        $transactions = Transaction::select( 'students.nisn', 'students.name', 'transactions.total_payment', 'transactions.note', 'users.name as admin')
+            ->join('users', 'user_id', 'users.id')
             ->join('students', 'student_id', 'students.id')
             ->join('classrooms', 'students.classroom_id', 'classrooms.id')
             ->where('classrooms.id', $id)
             ->orderByDesc('transactions.created_at')->get();
         return view('transactions.index', compact('transactions', 'classroom'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Transaction $transaction)
-    {
-        //
     }
 }

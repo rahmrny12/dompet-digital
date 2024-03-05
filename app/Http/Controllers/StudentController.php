@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BalanceSetting;
 use App\Models\Student;
 use App\Models\Classroom;
 use App\Models\Transaction;
+use App\Models\StudentParent;
 use Crypt;
 use Illuminate\Http\Request;
 
@@ -23,9 +25,12 @@ class StudentController extends Controller
 
     public function index($id)
     {
-        $students = Student::get();
+        $selected_classroom = Classroom::find($id);
+
+        $students = Student::where('classroom_id', $id)->get();
         $classrooms = Classroom::get();
-        return view('admin.student.index', compact('students', 'classrooms'));
+        $parents = StudentParent::get();
+        return view('admin.student.index', compact('students', 'classrooms', 'parents', 'selected_classroom'));
     }
 
     /**
@@ -46,19 +51,15 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->id != null) {
-            $this->validate($request, [
-                'nisn' => 'required',
-                'name' => 'required',
-                'classroom_id' => 'required',
-            ]);
-        } else {
-            $this->validate($request, [
-                'nisn' => 'required|unique:students',
-                'name' => 'required',
-                'classroom_id' => 'required',
-            ]);
-        }
+        $this->validate($request, [
+            'nisn' => "required|unique:students,nisn,$request->id",
+            'name' => 'required',
+            'classroom_id' => 'required',
+            'gender' => 'required',
+            // 'birthplace' => 'required',
+            // 'birthdate' => 'required',
+            'parent_id' => 'required',
+        ]);
 
         Student::updateOrCreate(
             [
@@ -68,6 +69,10 @@ class StudentController extends Controller
                 'nisn' => $request->nisn,
                 'name' => $request->name,
                 'classroom_id' => $request->classroom_id,
+                'gender' => $request->gender,
+                'birthplace' => $request->birthplace,
+                'birthdate' => $request->birthdate,
+                'parent_id' => $request->parent_id,
             ]
         );
 
@@ -83,7 +88,7 @@ class StudentController extends Controller
     public function show($id)
     {
         $id = Crypt::decrypt($id);
-        $student = Student::find($id);
+        $student = Student::with('balance')->find($id);
         return view('admin.student.show', compact('student'));
     }
 
@@ -148,14 +153,44 @@ class StudentController extends Controller
 
     public function getEdit($id)
     {
-        $students = Student::select('id', 'nisn','name','classroom_id')->where('id', $id)->first();
+        $students = Student::select(
+            'id',
+            'nisn',
+            'name',
+            'classroom_id',
+            'gender',
+            'birthplace',
+            'birthdate',
+            'parent_id',
+        )->where('id', $id)->first();
         return response()->json($students);
     }
 
     public function getBalanceSetting($id)
     {
-        $student = Student::with(['balance', 'balance_setting'])->find($id)->first();
+        $student = Student::with('balance_setting')->find($id);
         return response()->json($student);
+    }
+
+    public function updateBalanceSetting(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required',
+            'daily_limit' => 'required',
+            'max_limit' => 'required',
+        ]);
+
+        BalanceSetting::updateOrCreate(
+            [
+                'student_id' => $request->id
+            ],
+            [
+                'daily_limit' => $request->daily_limit,
+                'max_limit' => $request->max_limit,
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Data siswa berhasil diperbarui!');
     }
 
     public function getStudentsByClassroom($id)

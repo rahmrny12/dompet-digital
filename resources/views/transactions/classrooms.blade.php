@@ -24,7 +24,7 @@
                     <td>{{ $data->name }}</td>
                     <td>{{ $data->teacher->name ?? '-' }}</td>
                     <td>
-                        <a href="{{ route('transaction', $data->id) }}" class="btn btn-info text-light btn-sm px-4">Lihat</a>
+                        <a href="{{ route('transactions', $data->id) }}" class="btn btn-info text-light btn-sm px-4">Lihat</a>
                     </td>
                 </tr>
                 @endforeach

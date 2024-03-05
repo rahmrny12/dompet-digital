@@ -35,6 +35,7 @@ class StudentBalanceController extends Controller
         }
 
         RechargeHistory::create([
+            'user_id' => auth()->user()->id,
             'student_id' => $request->student_id,
             'amount' => $request->balance,
             'current_balance' => $oldBalance,

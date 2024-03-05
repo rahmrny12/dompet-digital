@@ -38,23 +38,13 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->id != null) {
-            $this->validate($request, [
-                'nip' => 'required|numeric',
-                'name' => 'required',
-                'email' => 'required|email',
-                'gender' => 'required',
-                'phone' => 'required',
-            ]);
-        } else {
-            $this->validate($request, [
-                'nip' => 'required|numeric',
-                'name' => 'required',
-                'email' => 'required|email',
-                'gender' => 'required',
-                'phone' => 'required',
-            ]);
-        }
+        $this->validate($request, [
+            'nip' => 'required|numeric',
+            'name' => 'required',
+            'email' => "required|email|unique:teachers,email,$request->id",
+            'gender' => 'required',
+            'phone' => 'required',
+        ]);
 
         Teacher::updateOrCreate(
             [

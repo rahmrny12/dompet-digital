@@ -15,6 +15,11 @@ class Student extends Model
         return $this->belongsTo(Classroom::class);
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(StudentParent::class);
+    }
+
     public function balance()
     {
         return $this->hasOne(StudentBalance::class);

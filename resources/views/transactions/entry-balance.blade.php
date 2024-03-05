@@ -8,13 +8,13 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    <a href="{{ route('transaction.classrooms') }}" class="btn btn-primary btn-sm">
+                    <a href="{{ route('transactions.classrooms') }}" class="btn btn-primary btn-sm">
                         <i class="nav-icon fas fa-money-check"></i> &nbsp; Histori Belanja Siswa
                     </a>
                 </h3>
             </div>
             <!-- /.card-header -->
-            <form action="{{ route('transaction.entry-balance') }}" method="post">
+            <form action="{{ route('transactions.entry-balance') }}" method="post">
                 @csrf
                 <div class="card-body row">
                     <div class="col-md-12 col-lg-6">

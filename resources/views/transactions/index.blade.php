@@ -8,7 +8,7 @@
     <div class="card">
         <div class="card-header">
           <h3 class="card-title">
-              <a href="{{ route('transaction.entry-balance') }}" class="btn btn-primary btn-sm">
+              <a href="{{ route('transactions.entry-balance') }}" class="btn btn-primary btn-sm">
                   <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Input Saldo Siswa
               </a>
           </h3>
@@ -23,6 +23,7 @@
                     <th>Nama Siswa</th>
                     <th>Nominal</th>
                     <th>Note</th>
+                    <th>Admin</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,6 +34,7 @@
                     <td>{{ $data->name }}</td>
                     <td>Rp. {{ number_format($data->total_payment, 0, ',', '.') }}</td>
                     <td>{{ $data->note }}</td>
+                    <td>{{ $data->admin ?? '-' }}</td>
                 </tr>
                 @endforeach
             </tbody>

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Schema::disableForeignKeyConstraints();
+        \App\Models\StudentParent::truncate();
         \App\Models\Student::truncate();
         \App\Models\User::truncate();
         \App\Models\Classroom::truncate();
@@ -45,6 +46,12 @@ class DatabaseSeeder extends Seeder
             'role' => 'student',
         ]);
 
+        $user5 = \App\Models\User::factory()->create([
+            'name' => 'Rendy',
+            'email' => 'rendy@example.com',
+            'role' => 'parent',
+        ]);
+
         $teacher1 = \App\Models\Teacher::create([
             'nip' => 123123123,
             'name' => $user2->name,
@@ -60,11 +67,19 @@ class DatabaseSeeder extends Seeder
             'teacher_id' => $teacher1->id,
         ]);
 
+        $parent1 = \App\Models\StudentParent::create([
+            'name' => $user5->name,
+            'email' => $user5->email,
+            'phone' => fake()->phoneNumber(),
+            'user_id' => $user5->id,
+        ]);
+
         \App\Models\Student::create([
             'nisn' => 123123123,
             'name' => $user3->name,
             'classroom_id' => $classroom1->id,
             'user_id' => $user3->id,
+            'parent_id' => $parent1->id,
         ]);
 
         \App\Models\Student::create([
@@ -72,6 +87,7 @@ class DatabaseSeeder extends Seeder
             'name' => $user4->name,
             'classroom_id' => $classroom1->id,
             'user_id' => $user4->id,
+            'parent_id' => $parent1->id,
         ]);
     }
 }

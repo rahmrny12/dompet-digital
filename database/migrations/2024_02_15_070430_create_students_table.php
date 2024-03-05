@@ -22,6 +22,8 @@ return new class extends Migration
             $table->date('birthdate')->nullable();
             $table->foreignId('classroom_id')->constrained();
             $table->foreignId('user_id')->nullable()->constrained();
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->foreign('parent_id')->references('id')->on('student_parents');
             $table->timestamps();
         });
     }
