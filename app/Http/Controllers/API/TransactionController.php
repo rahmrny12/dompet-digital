@@ -73,7 +73,7 @@ class TransactionController extends Controller
                 }
 
                 Transaction::create([
-                    '   ' => $user_id,
+                    'user_id' => $user_id,
                     'student_id' => $student_id,
                     'total_payment' => $total_payment,
                     'note' => $note,
