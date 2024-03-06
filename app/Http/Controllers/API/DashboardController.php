@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
@@ -29,7 +29,7 @@ class DashboardController extends Controller
             ]);
         } else {
             return response()->json([
-                'data' => Student::with('balance')->where('user_id', $user->id)->first(),
+                'data' => Student::with('balance')->find($request->student_id),
                 'message' => 'Success',
                 'status_code' => 200
             ]);

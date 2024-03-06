@@ -47,8 +47,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $user5 = \App\Models\User::factory()->create([
-            'name' => 'Rendy',
-            'email' => 'rendy@example.com',
+            'name' => 'Wali Murid',
+            'email' => 'walimurid@example.com',
             'role' => 'parent',
         ]);
 
