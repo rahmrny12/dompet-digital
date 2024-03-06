@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\StudentBalanceResource;
 use App\Models\Student;
 use App\Models\BalanceSetting;
 use App\Models\StudentBalance;
 use App\Models\StudentParent;
+use App\Models\RechargeHistory;
 use Crypt;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -76,43 +79,53 @@ class StudentController extends Controller
 
         $studentBalance = StudentBalance::where('student_id', $request->student_id)->first();
 
+        $insertedBalance = $request->balance;
+        $studentId = $request->student_id;
+
         try {
-            $oldBalance = 0;
-            $newBalance = $request->balance;
+            $result = DB::transaction(function () use ($studentBalance, $insertedBalance, $studentId, ) {
+                $oldBalance = 0;
+                $newBalance = $insertedBalance;
 
-            if ($studentBalance) {
-                $oldBalance = $studentBalance->current_balance;
-                $newBalance += $oldBalance;
-            }
+                if ($studentBalance) {
+                    $oldBalance = $studentBalance->current_balance;
+                    $newBalance += $oldBalance;
+                }
 
-            RechargeHistory::create([
-                'user_id' => auth()->user()->id,
-                'student_id' => $request->student_id,
-                'amount' => $request->balance,
-                'current_balance' => $oldBalance,
-                'updated_balance' => $newBalance,
-            ]);
+                RechargeHistory::create([
+                    'user_id' => auth()->user()->id,
+                    'student_id' => $studentId,
+                    'amount' => $insertedBalance,
+                    'current_balance' => $oldBalance,
+                    'updated_balance' => $newBalance,
+                ]);
 
-            StudentBalance::updateOrCreate(
-                [
-                    'student_id' => $request->student_id
-                ],
-                [
-                    'current_balance' => $newBalance,
-                ]
-            );
+                StudentBalance::updateOrCreate(
+                    [
+                        'student_id' => $studentId
+                    ],
+                    [
+                        'current_balance' => $newBalance,
+                    ]
+                );
 
-            if (!$studentBalance) {
-                $studentBalance = StudentBalance::where('student_id', $request->student_id)->first();
-            } else {
-                $studentBalance->refresh();
-            }
+                if (!$studentBalance) {
+                    $studentBalance = StudentBalance::where('student_id', $studentId)->first();
+                } else {
+                    $studentBalance->refresh();
+                }
 
-            return response()->json([
-                'data' => $studentBalance,
-                'message' => 'Success',
-                'status_code' => 200
-            ]);
+                $studentBalance['old_balance'] = (int) $oldBalance;
+                $studentBalance['inserted_balance'] = (int) $insertedBalance;
+
+                return response()->json([
+                    'data' => new StudentBalanceResource($studentBalance),
+                    'message' => 'Success',
+                    'status_code' => 200
+                ]);
+            });
+
+            return $result;
         } catch (\Exception $e) {
             return response()->json([
                 'data' => $studentBalance->refresh(),

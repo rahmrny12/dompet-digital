@@ -37,7 +37,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/students', [StudentController::class, 'getStudent']);
     Route::get('/students/{id}/balance', [StudentController::class, 'getStudentBalance']);
     Route::post('/students/{id}/setting', [StudentController::class, 'updateBalanceSetting']);
-    // Route::post('/entry-balance', [StudentController::class, 'storeStudentBalance']);
+    Route::post('/entry-balance', [StudentController::class, 'storeStudentBalance']);
     // Route::get('/students/{id}/setting', [StudentController::class, 'getBalanceSetting']);
     /* --- */
     Route::get('/settings', [SettingController::class, 'show']);
