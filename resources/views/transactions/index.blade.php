@@ -33,7 +33,7 @@
                     <td>{{ $data->nisn }}</td>
                     <td>{{ $data->name }}</td>
                     <td>Rp. {{ number_format($data->total_payment, 0, ',', '.') }}</td>
-                    <td>{{ $data->note }}</td>
+                    <td>{{ $data->note ?? '-' }}</td>
                     <td>{{ $data->admin ?? '-' }}</td>
                 </tr>
                 @endforeach

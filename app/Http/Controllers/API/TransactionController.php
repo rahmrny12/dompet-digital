@@ -41,7 +41,10 @@ class TransactionController extends Controller
             'total_payment' => 'required|int'
         ]);
 
-        $user_id = auth()->user()->id;
+        $user_id = null;
+        if (auth()->user()->role)
+            $user_id = auth()->user()->id;
+
         $student_id = $request->student_id;
         $total_payment = $request->total_payment;
         $note = $request->note;
@@ -70,7 +73,7 @@ class TransactionController extends Controller
                 }
 
                 Transaction::create([
-                    'user_id' => $user_id,
+                    '   ' => $user_id,
                     'student_id' => $student_id,
                     'total_payment' => $total_payment,
                     'note' => $note,
@@ -101,6 +104,7 @@ class TransactionController extends Controller
                         'total_payment' => $total_payment,
                         'available_balance' => $available_balance,
                         'remaining_balance' => $remaining_balance,
+                        'note' => $note,
                     ],
                     'message' => 'Pembayaran berhasil',
                     'status_code' => 200

@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->foreignId('student_id')->constrained();
             $table->integer('total_payment');
-            $table->string('note');
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }
