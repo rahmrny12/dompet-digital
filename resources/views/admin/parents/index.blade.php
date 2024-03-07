@@ -92,9 +92,9 @@
                                     <label for="student_id">Siswa</label>
                                     <select id="student_id" name="student_id[]"
                                         class="select2bs4 form-control @error('student_id') is-invalid @enderror" multiple>
-                                        <option value="">-- Pilih Siswa --</option>
                                         @foreach ($students as $data)
-                                            <option value="{{ $data->id }}">{{ $data->name }} - {{ $data->classroom->name }}</option>
+                                            <option value="{{ $data->id }}">{{ $data->name }} -
+                                                {{ $data->classroom->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -121,24 +121,29 @@
             $('#id').val('');
             $('#nisn').val('');
             $('#name').val('');
+            $('#email').val('');
+            $('#phone').val('');
             $('#classroom_id').val('');
+            $('#student_id option').removeAttr("selected").trigger('change');
         }
 
         function getEdit(id) {
+            $('#student_id option').removeAttr("selected").trigger('change');
+
             $.ajax({
                 type: "GET",
                 dataType: "JSON",
                 url: `{{ url('/parents/${id}/json') }}`,
                 success: function(result) {
                     if (result) {
-                        // $(`#student_id`).val([1]).trigger('change');
                         $("#judul").text('Edit Data Wali Murid ' + result.name);
                         $("#id").val(result.id)
                         $("#name").val(result.name)
                         $("#email").val(result.email)
                         $("#phone").val(result.phone)
-                        $.each(result.students, function(index, el){
-                            $(`#student_id option[value=${el.id}]`).attr('selected','selected').trigger('change');
+                        $.each(result.students, function(index, el) {
+                            $(`#student_id option[value=${el.id}]`).attr('selected', 'selected')
+                                .trigger('change');
                         });
                     }
                 },

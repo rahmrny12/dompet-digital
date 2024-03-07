@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\StudentParent;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class StudentParentController extends Controller
 {
@@ -18,6 +20,7 @@ class StudentParentController extends Controller
     {
         $parents = StudentParent::get();
         $students = Student::get();
+
         return view('admin.parents.index', compact('parents', 'students'));
     }
 
@@ -52,10 +55,26 @@ class StudentParentController extends Controller
         $student_ids = $request->student_id;
 
         try {
-            $result = DB::transaction(function () use ($parent_id, $name, $email, $phone, $student_ids, ) {
-                // User::
+            $result = DB::transaction(function () use ($parent_id, $name, $email, $phone, $student_ids) {
+                $user = User::where('email', $email)->first();
 
-                StudentParent::updateOrCreate(
+                if ($user) {
+                    $user->update(['name' => $name]);
+                } else {
+                    $latestId = StudentParent::max('id') ?? 0;
+                    $newId = $latestId + 1;
+                    $password = "WM" . str_pad($newId, 4, '0', STR_PAD_LEFT);
+
+                    $user = User::create([
+                        'name' => $name,
+                        'email' => $email,
+                        'role' => 'parent',
+                        'password' => Hash::make($password),
+                        'real_password' => $password,
+                    ]);
+                }
+
+                $parent = StudentParent::updateOrCreate(
                     [
                         'id' => $parent_id
                     ],
@@ -63,8 +82,10 @@ class StudentParentController extends Controller
                         'name' => $name,
                         'email' => $email,
                         'phone' => $phone,
+                        'user_id' => $user->id,
                     ]
                 );
+                $parent_id = $parent->id;
 
                 if ($student_ids) {
                     Student::whereIn('id', $student_ids)
@@ -83,6 +104,7 @@ class StudentParentController extends Controller
 
             return $result;
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return redirect()->back()->with('warning', 'Data wali murid gagal diperbarui.');
         }
     }
@@ -117,49 +139,57 @@ class StudentParentController extends Controller
      */
     public function destroy($id)
     {
-        $existStudents = Student::where('parent_id', $id)->exists();
-        if ($existStudents) {
-            return redirect()->back()->with('warning', 'Kelas sudah digunakan');
-        }
+        try {
+            $existStudents = Student::where('parent_id', $id)->exists();
+            if ($existStudents)
+                Student::where('parent_id', $id)->update(['parent_id' => null]);
 
-        $result = Student::findorfail($id)->delete();
-        if ($result) {
-            return redirect()->back()->with('warning', 'Data kelas berhasil dihapus! (Silahkan cek trash data kelas)');
-        }
+            $parent = StudentParent::findorfail($id);
+            User::where('email', $parent->email)->delete();
+            $parent->delete();
 
-        return redirect()->back()->with('danger', 'Data kelas gagal dihapus.');
+            return redirect()->back()->with('warning', 'Data wali murid berhasil dihapus! (Silahkan cek trash data wali murid)');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('danger', 'Data wali murid gagal dihapus.');
+        }
     }
 
     public function trash()
     {
-        $students = Student::onlyTrashed()->get();
-        return view('admin.students.trash', compact('students'));
+        $parents = StudentParent::onlyTrashed()->get();
+        return view('admin.parents.trash', compact('parents'));
     }
 
     public function restore($id)
     {
         $id = Crypt::decrypt($id);
-        $result = Student::withTrashed()->findorfail($id)->restore();
+        $result = StudentParent::withTrashed()->findorfail($id)->restore();
         if ($result) {
-            return redirect()->back()->with('info', 'Data kelas berhasil direstore! (Silahkan cek data kelas)');
+            return redirect()->back()->with('info', 'Data wali murid berhasil direstore! (Silahkan cek data wali murid)');
         }
 
-        return redirect()->back()->with('warning', 'Data kelas gagal direstore.');
+        return redirect()->back()->with('warning', 'Data wali murid gagal direstore.');
     }
 
     public function kill($id)
     {
-        $result = Student::withTrashed()->findorfail($id)->forceDelete();
+        $result = StudentParent::withTrashed()->findorfail($id)->forceDelete();
         if ($result) {
-            return redirect()->back()->with('success', 'Data kelas berhasil dihapus secara permanen');
+            return redirect()->back()->with('success', 'Data wali murid berhasil dihapus secara permanen');
         }
 
-        return redirect()->back()->with('warning', 'Data kelas gagal dihapus secara permanen');
+        return redirect()->back()->with('warning', 'Data wali murid gagal dihapus secara permanen');
     }
 
     public function getEdit(Request $request)
     {
-        $parent = StudentParent::with('students')->where('id', $request->id)->first();
+        $parent = StudentParent::with('students', 'students.classroom')->where('id', $request->id)->first();
         return response()->json($parent);
+    }
+
+    public function getAvailableStudents(Request $request)
+    {
+        $students = Student::where('parent_id', null)->get();
+        return response()->json($students);
     }
 }

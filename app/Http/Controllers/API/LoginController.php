@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -37,7 +38,7 @@ class LoginController extends Controller
         }
 
         return response()->json([
-            'data' => $user,
+            'data' => new UserResource($user),
             'access_token' => $user->createToken('authToken')->accessToken,
             'token_type' => 'Bearer',
             'status_code' => 200,
