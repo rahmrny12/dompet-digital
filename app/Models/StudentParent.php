@@ -14,4 +14,9 @@ class StudentParent extends Model
     {
         return $this->hasMany(Student::class, 'parent_id', 'id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

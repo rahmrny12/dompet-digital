@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('student_parents');
+            $table->integer('nfc_id')->nullable();
             $table->timestamps();
         });
     }

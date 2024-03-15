@@ -20,35 +20,41 @@ class DatabaseSeeder extends Seeder
         \App\Models\Student::truncate();
         \App\Models\User::truncate();
         \App\Models\Classroom::truncate();
+        \App\Models\Transaction::truncate();
         Schema::enableForeignKeyConstraints();
 
         $user1 = \App\Models\User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
+            'username' => 'admin',
             'role' => 'admin',
         ]);
 
         $user2 = \App\Models\User::factory()->create([
             'name' => 'Yahya',
             'email' => 'yahya@example.com',
+            'username' => 'yahya',
             'role' => 'teacher',
         ]);
 
         $user3 = \App\Models\User::factory()->create([
             'name' => 'Ryan',
             'email' => 'ryan@example.com',
+            'username' => 'ryan',
             'role' => 'student',
         ]);
 
         $user4 = \App\Models\User::factory()->create([
             'name' => 'Petit',
             'email' => 'petit@example.com',
+            'username' => 'petit',
             'role' => 'student',
         ]);
 
         $user5 = \App\Models\User::factory()->create([
             'name' => 'Wali Murid',
             'email' => 'walimurid@example.com',
+            'username' => 'walimurid',
             'role' => 'parent',
         ]);
 
@@ -80,6 +86,7 @@ class DatabaseSeeder extends Seeder
             'classroom_id' => $classroom1->id,
             'user_id' => $user3->id,
             'parent_id' => $parent1->id,
+            'nfc_id' => 123123,
         ]);
 
         \App\Models\Student::create([
@@ -88,6 +95,15 @@ class DatabaseSeeder extends Seeder
             'classroom_id' => $classroom1->id,
             'user_id' => $user4->id,
             'parent_id' => $parent1->id,
+            'nfc_id' => 123124,
+        ]);
+
+        \App\Models\Transaction::factory(10)->create([
+            'student_id' => 1,
+        ]);
+
+        \App\Models\Transaction::factory(10)->create([
+            'student_id' => 2,
         ]);
     }
 }

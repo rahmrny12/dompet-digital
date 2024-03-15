@@ -38,6 +38,11 @@
                                             data-target="#form-parents">
                                             <i class="nav-icon fas fa-edit"></i> &nbsp; Edit
                                         </button>
+                                        <button type="button" class="btn btn-primary btn-sm"
+                                            onclick="getEditPassword({{ $data->id }})" data-toggle="modal"
+                                            data-target="#form-edit-password">
+                                            <i class="nav-icon fas fa-key"></i> &nbsp; Edit
+                                        </button>
                                         <button class="btn btn-danger btn-sm"><i class="nav-icon fas fa-trash-alt"></i>
                                             &nbsp; Hapus</button>
                                     </form>
@@ -82,6 +87,12 @@
                                         class="form-control @error('email') is-invalid @enderror"
                                         placeholder="{{ __('Email') }}">
                                 </div>
+                                <div class="form-group" id="form_username">
+                                    <label for="username">Username</label>
+                                    <input type='text' id="username" name='username'
+                                        class="form-control @error('username') is-invalid @enderror"
+                                        placeholder="{{ __('Username') }}">
+                                </div>
                                 <div class="form-group" id="form_phone">
                                     <label for="phone">Nomor Telepon</label>
                                     <input type='text' id="phone" name='phone'
@@ -97,6 +108,51 @@
                                                 {{ $data->classroom->name }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                                <div class="form-group" id="form_address">
+                                    <label for="address">Alamat (opsional)</label>
+                                    <input type='text' id="address" name='address'
+                                        class="form-control @error('address') is-invalid @enderror"
+                                        placeholder="{{ __('Alamat wali murid') }}">
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                            class='nav-icon fas fa-arrow-left'></i> &nbsp; Kembali</button>
+                    <button type="submit" class="btn btn-primary"><i class="nav-icon fas fa-save"></i> &nbsp;
+                        Simpan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extra large modal -->
+    <div class="modal fade bd-example-modal-md" id="form-edit-password" tabindex="-1" role="dialog"
+        aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="judul">Edit Password</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('parents.update-password') }}" method="post">
+                        @csrf
+                        @method('put')
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" id="id" name="id">
+                                <div id="real_password" class="mb-2">Password saat ini : -</div>
+                                <div class="form-group" id="form_password">
+                                    <label for="password">Ganti Password</label>
+                                    <input type='password' id="password" name='password'
+                                        class="form-control @error('password') is-invalid @enderror"
+                                        placeholder="{{ __('Masukkan Password Baru') }}">
                                 </div>
                             </div>
                         </div>
@@ -116,6 +172,8 @@
 
 @section('script')
     <script>
+        var studentsData = @json($students);
+
         function getCreate() {
             $("#judul").text('Tambah Data Wali Murid');
             $('#id').val('');
@@ -125,6 +183,13 @@
             $('#phone').val('');
             $('#classroom_id').val('');
             $('#student_id option').removeAttr("selected").trigger('change');
+            $('#student_id').empty();
+            $.each(studentsData, function(index, el) {
+                $('#student_id').append($('<option>', {
+                    value: el.id,
+                    text: el.name + ' - ' + el.classroom.name
+                }));
+            });
         }
 
         function getEdit(id) {
@@ -136,15 +201,48 @@
                 url: `{{ url('/parents/${id}/json') }}`,
                 success: function(result) {
                     if (result) {
-                        $("#judul").text('Edit Data Wali Murid ' + result.name);
-                        $("#id").val(result.id)
-                        $("#name").val(result.name)
-                        $("#email").val(result.email)
-                        $("#phone").val(result.phone)
-                        $.each(result.students, function(index, el) {
+                        $("#judul").text('Edit Data Wali Murid ' + result[0].name);
+                        $("#id").val(result[0].id)
+                        $("#name").val(result[0].name)
+                        $("#email").val(result[0].email)
+                        $("#username").val(result[0].user.username)
+                        $("#phone").val(result[0].phone)
+                        $("#address").val(result[0].address)
+
+                        $('#student_id').empty();
+                        $.each(result[1], function(index, el) {
+                            $('#student_id').append($('<option>', {
+                                value: el.id,
+                                text: el.name + ' - ' + el.classroom.name
+                            }));
+                        });
+
+                        $.each(result[0].students, function(index, el) {
                             $(`#student_id option[value=${el.id}]`).attr('selected', 'selected')
                                 .trigger('change');
                         });
+                    }
+                },
+                error: function() {
+                    toastr.error("Errors 404!");
+                },
+                complete: function() {}
+            });
+        }
+
+        function getEditPassword(id) {
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: `{{ url('/parents/${id}/password/json') }}`,
+                success: function(result) {
+                    if (result) {
+                        $("#judul").text('Edit Password ');
+                        $("#id").val(result.id)
+                        if (result.real_password) {
+                            $("#real_password").html(`Password saat ini : <b>${result.real_password}</b>`)
+                        }
+                        $("#password").val(result.real_password)
                     }
                 },
                 error: function() {

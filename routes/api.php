@@ -34,13 +34,16 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::post('/transactions', [TransactionController::class, 'store']);
     /* --- */
-    Route::get('/students', [StudentController::class, 'getStudent']);
-    Route::get('/students/{id}/balance', [StudentController::class, 'getStudentBalance']);
-    Route::post('/students/{id}/setting', [StudentController::class, 'updateBalanceSetting']);
-    Route::post('/entry-balance', [StudentController::class, 'storeStudentBalance']);
-    // Route::get('/students/{id}/setting', [StudentController::class, 'getBalanceSetting']);
-    /* --- */
     Route::get('/settings', [SettingController::class, 'show']);
     Route::post('/settings', [SettingController::class, 'store']);
+
+    Route::middleware(['role:parent'])->group(function () {
+        /* --- */
+        Route::get('/students', [StudentController::class, 'getStudent']);
+        Route::get('/students/{id}/balance', [StudentController::class, 'getStudentBalance']);
+        Route::post('/students/{id}/setting', [StudentController::class, 'updateBalanceSetting']);
+        Route::post('/entry-balance', [StudentController::class, 'storeStudentBalance']);
+        // Route::get('/students/{id}/setting', [StudentController::class, 'getBalanceSetting']);
+    });
 });
 

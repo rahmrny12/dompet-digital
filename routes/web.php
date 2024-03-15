@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
@@ -53,12 +54,18 @@ Route::middleware(['auth'])->group(function () {
 
     /* --- */
     Route::resource('/parents', StudentParentController::class);
+    Route::post('/parents/update-password', [StudentParentController::class, 'updatePassword'])->name('parents.update-password');
     Route::get('/parents/{id}/json', [StudentParentController::class, 'getEdit']);
+    Route::get('/parents/{id}/password/json', [StudentParentController::class, 'getEditPassword']);
     Route::get('/available-students/json', [StudentParentController::class, 'getAvailableStudents']);
 
     /* --- */
     Route::resource('/classrooms', ClassroomController::class);
     Route::get('/classrooms/{id}/json', [ClassroomController::class, 'getEdit']);
+
+    /* --- */
+    Route::resource('/admins', AdminController::class);
+    Route::get('/admins/{id}/json', [AdminController::class, 'getEdit']);
 
     /* --- */
     Route::get('/transactions/classrooms', [TransactionController::class, 'classrooms'])->name('transactions.classrooms');

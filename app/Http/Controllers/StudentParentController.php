@@ -19,7 +19,7 @@ class StudentParentController extends Controller
     public function index()
     {
         $parents = StudentParent::get();
-        $students = Student::get();
+        $students = Student::whereDoesntHave('parent')->get();
 
         return view('admin.parents.index', compact('parents', 'students'));
     }
@@ -46,20 +46,23 @@ class StudentParentController extends Controller
             'name' => 'required',
             'phone' => 'required',
             'email' => "required|unique:student_parents,email,$request->id",
+            'username' => 'required',
         ]);
 
         $parent_id = $request->id;
         $name = $request->name;
         $email = $request->email;
+        $username = $request->username;
+        $address = $request->address;
         $phone = $request->phone;
         $student_ids = $request->student_id;
 
         try {
-            $result = DB::transaction(function () use ($parent_id, $name, $email, $phone, $student_ids) {
+            $result = DB::transaction(function () use ($parent_id, $name, $email, $phone, $student_ids, $username, $address) {
                 $user = User::where('email', $email)->first();
 
                 if ($user) {
-                    $user->update(['name' => $name]);
+                    $user->update(['name' => $name, 'username' => $username, 'email' => $email,  'phone' => $phone]);
                 } else {
                     $latestId = StudentParent::max('id') ?? 0;
                     $newId = $latestId + 1;
@@ -68,6 +71,8 @@ class StudentParentController extends Controller
                     $user = User::create([
                         'name' => $name,
                         'email' => $email,
+                        'username' => $username,
+                        'phone' => $phone,
                         'role' => 'parent',
                         'password' => Hash::make($password),
                         'real_password' => $password,
@@ -81,6 +86,8 @@ class StudentParentController extends Controller
                     [
                         'name' => $name,
                         'email' => $email,
+                        'username' => $username,
+                        'address' => $address,
                         'phone' => $phone,
                         'user_id' => $user->id,
                     ]
@@ -104,8 +111,32 @@ class StudentParentController extends Controller
 
             return $result;
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return redirect()->back()->with('warning', 'Data wali murid gagal diperbarui.');
+        }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $this->validate($request, [
+            'id' => "required",
+            'password' => 'required',
+        ]);
+
+        $id = $request->id;
+        $password = $request->password;
+
+        try {
+            $result = DB::transaction(function () use ($id, $password) {
+                $user_id = StudentParent::select('user_id')->find($id);
+
+                User::where('id', $user_id)->update(['password' => Hash::make($password), 'real_password' => $password]);
+
+                return redirect()->back()->with('success', 'Password user berhasil diperbarui!');
+            });
+
+            return $result;
+        } catch (\Exception $e) {
+            return redirect()->back()->with('warning', 'Password gagal diperbarui.');
         }
     }
 
@@ -183,8 +214,21 @@ class StudentParentController extends Controller
 
     public function getEdit(Request $request)
     {
-        $parent = StudentParent::with('students', 'students.classroom')->where('id', $request->id)->first();
-        return response()->json($parent);
+        $parent = StudentParent::with('students', 'students.classroom', 'user')->where('id', $request->id)->first();
+
+        $students = Student::with('classroom')->whereDoesntHave('parent', function ($query) use ($parent) {
+            $query->where('parent_id', '<>', $parent->id);
+        })->orWhereDoesntHave('parent')->get();
+
+        return response()->json([$parent, $students]);
+    }
+
+    public function getEditPassword(Request $request)
+    {
+        $password = StudentParent::select(['student_parents.id', 'users.real_password'])
+            ->join('users', 'users.id', 'student_parents.user_id')->where('student_parents.id', $request->id)->first();
+
+        return response()->json($password);
     }
 
     public function getAvailableStudents(Request $request)

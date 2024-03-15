@@ -52,6 +52,12 @@
                                     <p>Kelas Siswa</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admins.index') }}" class="nav-link" id="DataAdmins">
+                                    <i class="fas fa-users nav-icon"></i>
+                                    <p>Admin</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
 

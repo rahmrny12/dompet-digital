@@ -59,6 +59,7 @@ class StudentController extends Controller
             // 'birthplace' => 'required',
             // 'birthdate' => 'required',
             'parent_id' => 'required',
+            'nfc_id' => 'required',
         ]);
 
         Student::updateOrCreate(
@@ -73,6 +74,7 @@ class StudentController extends Controller
                 'birthplace' => $request->birthplace,
                 'birthdate' => $request->birthdate,
                 'parent_id' => $request->parent_id,
+                'nfc_id' => $request->nfc_id,
             ]
         );
 
@@ -162,6 +164,7 @@ class StudentController extends Controller
             'birthplace',
             'birthdate',
             'parent_id',
+            'nfc_id',
         )->where('id', $id)->first();
         return response()->json($students);
     }
