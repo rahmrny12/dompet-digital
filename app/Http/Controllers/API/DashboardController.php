@@ -49,7 +49,7 @@ class DashboardController extends Controller
             ]);
 
         return response()->json([
-            'data' => $announcement,
+            'data' => $announcement->first(),
             'message' => 'Success',
             'status_code' => 200
         ]);
