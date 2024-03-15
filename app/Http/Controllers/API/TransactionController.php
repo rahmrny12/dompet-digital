@@ -29,6 +29,12 @@ class TransactionController extends Controller
         if ($request->student_id)
             $transactions = $transactions->where('students.id', $request->student_id);
 
+        if (!$transactions->exists())
+            return response()->json([
+                'message' => 'Empty',
+                'status_code' => 404
+            ], 404);
+
         return response()->json([
             'data' => $transactions->simplePaginate($limitPerPage),
             'message' => 'Success',

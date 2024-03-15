@@ -61,10 +61,16 @@ class StudentController extends Controller
             'current_balance',
             'daily_limit',
             'max_limit'
-        )->leftJoin('balance_settings', 'balance_settings.student_id', '=', 'student_balances.student_id')->where('student_balances.student_id', $id)->first();
+        )->leftJoin('balance_settings', 'balance_settings.student_id', '=', 'student_balances.student_id')->where('student_balances.student_id', $id);
+
+        if (!$balance->exists())
+            return response()->json([
+                'message' => 'Empty',
+                'status_code' => 404
+            ]);
 
         return response()->json([
-            'data' => $balance,
+            'data' => $balance->first(),
             'message' => 'Success',
             'status_code' => 200
         ]);

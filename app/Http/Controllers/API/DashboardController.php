@@ -40,7 +40,13 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        $announcement = Announcement::first();
+        $announcement = Announcement::query();
+
+        if (!$announcement->exists())
+            return response()->json([
+                'message' => 'Empty',
+                'status_code' => 404
+            ]);
 
         return response()->json([
             'data' => $announcement,
