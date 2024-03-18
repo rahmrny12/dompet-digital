@@ -24,7 +24,7 @@ class SettingController extends Controller
             'data' => $setting,
             'message' => 'Not Found',
             'status_code' => 404
-        ]);
+        ], 404);
     }
 
     public function store(Request $request)

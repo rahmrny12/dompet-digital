@@ -42,7 +42,7 @@
                                 <h5 class="font-weight-bold">Rp.
                                     {{ number_format($student->balance->current_balance ?? 0, 0, ',', '.') }}</h5>
                                 <h5>NFC ID</h5>
-                                <h5>-</h5>
+                                <h5>{{ $student->nfc_id }}</h5>
                             </div>
                             <button type="button" class="btn btn-success btn-sm my-4 px-4"
                                 onclick="getBalanceSetting({{ $student->id }})" data-toggle="modal"

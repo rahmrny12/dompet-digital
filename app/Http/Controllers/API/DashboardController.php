@@ -46,7 +46,7 @@ class DashboardController extends Controller
             return response()->json([
                 'message' => 'Empty',
                 'status_code' => 404
-            ]);
+            ], 404);
 
         return response()->json([
             'data' => $announcement->first(),

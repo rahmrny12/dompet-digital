@@ -45,7 +45,7 @@ class StudentController extends Controller
                 'data' => null,
                 'message' => 'Failed',
                 'status_code' => 404
-            ]);
+            ], 404);
 
         return response()->json([
             'data' => $students,
@@ -65,9 +65,15 @@ class StudentController extends Controller
 
         if (!$balance->exists())
             return response()->json([
-                'message' => 'Empty',
-                'status_code' => 404
-            ]);
+                'data' => [
+                    "student_id" => (int) $id,
+                    "current_balance" => 0,
+                    "daily_limit" => null,
+                    "max_limit" => null
+                ],
+                'message' => 'Success',
+                'status_code' => 200
+            ], 200);
 
         return response()->json([
             'data' => $balance->first(),
