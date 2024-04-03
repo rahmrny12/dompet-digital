@@ -28,7 +28,7 @@ class StudentController extends Controller
 
     //     return response()->json([
     //         'data' => $balance_setting,
-    //         'message' => 'Success',
+    //         'message' => 'Berhasil',
     //         'status_code' => 200
     //     ]);
     // }
@@ -49,35 +49,37 @@ class StudentController extends Controller
 
         return response()->json([
             'data' => $students,
-            'message' => 'Success',
+            'message' => 'Berhasil',
             'status_code' => 200
         ]);
     }
 
     public function getStudentBalance($id)
     {
-        $balance = StudentBalance::select(
-            'student_balances.student_id',
-            'current_balance',
+        $student = Student::select(
+            'students.id as student_id',
+            'students.name as student_name',
+            'classrooms.name as classroom_name',
+            'nisn',
+            DB::raw('ifnull(current_balance,0) as current_balance'),
             'daily_limit',
-            'max_limit'
-        )->leftJoin('balance_settings', 'balance_settings.student_id', '=', 'student_balances.student_id')->where('student_balances.student_id', $id);
+            'max_limit',
+        )->leftJoin('classrooms', 'classrooms.id', '=', 'students.classroom_id')
+            ->leftJoin('student_balances', 'student_balances.student_id', '=', 'students.id')
+            ->leftJoin('balance_settings', 'balance_settings.student_id', '=', 'students.id')
+            ->where('students.id', $id);
 
-        if (!$balance->exists())
+        if (!$student->exists()) {
             return response()->json([
-                'data' => [
-                    "student_id" => (int) $id,
-                    "current_balance" => 0,
-                    "daily_limit" => null,
-                    "max_limit" => null
-                ],
-                'message' => 'Success',
-                'status_code' => 200
-            ], 200);
+                'data' => null,
+                'message' => 'Siswa tidak ditemukan',
+                'status_code' => 404
+            ]);
+        }
 
         return response()->json([
-            'data' => $balance->first(),
-            'message' => 'Success',
+            'data' => $student->first(),
+            'message' => 'Berhasil',
             'status_code' => 200
         ]);
     }
@@ -132,7 +134,7 @@ class StudentController extends Controller
 
                 return response()->json([
                     'data' => new StudentBalanceResource($studentBalance),
-                    'message' => 'Success',
+                    'message' => 'Berhasil',
                     'status_code' => 200
                 ]);
             });
@@ -164,11 +166,11 @@ class StudentController extends Controller
             ]
         );
 
-        $balance_setting = BalanceSetting::find($id);
+        $balance_setting = BalanceSetting::select('student_id', 'daily_limit', 'max_limit')->where('student_id', $id)->first();
 
         return response()->json([
             'data' => $balance_setting,
-            'message' => 'Success',
+            'message' => 'Berhasil',
             'status_code' => 200
         ]);
     }

@@ -16,7 +16,7 @@ class SettingController extends Controller
         if ($setting)
             return response()->json([
                 'data' => $setting,
-                'message' => 'Success',
+                'message' => 'Berhasil',
                 'status_code' => 200
             ]);
 

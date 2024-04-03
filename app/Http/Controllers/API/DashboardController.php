@@ -24,13 +24,13 @@ class DashboardController extends Controller
                     'teacher_count' => Teacher::count(),
                     'classroom_count' => Classroom::count(),
                 ],
-                'message' => 'Success',
+                'message' => 'Berhasil',
                 'status_code' => 200
             ]);
         } else {
             return response()->json([
                 'data' => Student::with('balance')->find($request->student_id),
-                'message' => 'Success',
+                'message' => 'Berhasil',
                 'status_code' => 200
             ]);
         }
@@ -44,13 +44,13 @@ class DashboardController extends Controller
 
         if (!$announcement->exists())
             return response()->json([
-                'message' => 'Empty',
+                'message' => 'Data pengumuman tidak ditemukan.',
                 'status_code' => 404
             ], 404);
 
         return response()->json([
             'data' => $announcement->first(),
-            'message' => 'Success',
+            'message' => 'Berhasil',
             'status_code' => 200
         ]);
     }

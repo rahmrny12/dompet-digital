@@ -37,7 +37,7 @@ class TransactionController extends Controller
 
         return response()->json([
             'data' => $transactions->simplePaginate($limitPerPage),
-            'message' => 'Success',
+            'message' => 'Berhasil',
             'status_code' => 200
         ]);
     }

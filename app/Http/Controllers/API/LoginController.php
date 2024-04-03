@@ -50,7 +50,7 @@ class LoginController extends Controller
         if($removeToken) {
             return response()->json([
                 'success' => true,
-                'message' => 'Logout Success!',
+                'message' => 'Logout Berhasil!',
             ]);
         }
     }

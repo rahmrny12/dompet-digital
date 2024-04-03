@@ -10,7 +10,7 @@
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
                     placeholder="{{ __('E-Mail Address') }}" name="email" value="{{ old('email') }}" autocomplete="off"
                     autofocus>
-                <div class="input-group-append">
+                <div class="input-group-append">php ar
                     <div class="input-group-text">
                         <span class="fas fa-envelope"></span>
                     </div>
