@@ -62,7 +62,7 @@ class StudentParentController extends Controller
                 $user = User::where('email', $email)->first();
 
                 if ($user) {
-                    $user->update(['name' => $name, 'username' => $username, 'email' => $email,  'phone' => $phone]);
+                    // $user->update(['name' => $name, 'username' => $username, 'email' => $email,  'phone' => $phone]);
                 } else {
                     $latestId = StudentParent::max('id') ?? 0;
                     $newId = $latestId + 1;
@@ -128,6 +128,7 @@ class StudentParentController extends Controller
         try {
             $result = DB::transaction(function () use ($id, $password) {
                 $user_id = StudentParent::select('user_id')->find($id);
+                dd($user_id);
 
                 User::where('id', $user_id)->update(['password' => Hash::make($password), 'real_password' => $password]);
 
@@ -225,8 +226,7 @@ class StudentParentController extends Controller
 
     public function getEditPassword(Request $request)
     {
-        $password = StudentParent::select(['student_parents.id', 'users.real_password'])
-            ->join('users', 'users.id', 'student_parents.user_id')->where('student_parents.id', $request->id)->first();
+        $password = StudentParent::join('users', 'users.id', 'student_parents.user_id')->where('student_parents.id', $request->id)->first();
 
         return response()->json($password);
     }

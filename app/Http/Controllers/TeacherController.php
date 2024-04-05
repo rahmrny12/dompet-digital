@@ -39,9 +39,8 @@ class TeacherController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nip' => 'required|numeric',
+            'nip' => "required|numeric|unique:teachers,nip,$request->id",
             'name' => 'required',
-            'email' => "required|email|unique:teachers,email,$request->id",
             'gender' => 'required',
             'phone' => 'required',
         ]);
@@ -53,7 +52,6 @@ class TeacherController extends Controller
             [
                 'nip' => $request->nip,
                 'name' => $request->name,
-                'email' => $request->email,
                 'gender' => $request->gender,
                 'phone' => $request->phone,
             ]
@@ -133,7 +131,7 @@ class TeacherController extends Controller
 
     public function getEdit(Request $request)
     {
-        $teacher = Teacher::select('id', 'nip', 'name', 'email', 'gender', 'phone')->where('id', $request->id)->first();
+        $teacher = Teacher::select('id', 'nip', 'name', 'gender', 'phone')->where('id', $request->id)->first();
         return response()->json($teacher);
     }
 }

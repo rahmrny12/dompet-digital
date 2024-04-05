@@ -137,7 +137,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "JSON",
-                    url: `{{ url('/classrooms/${id}/students') }}`,
+                    url: `{{ url('/classrooms/${id}/students/json') }}`,
                     success: function(result) {
                         studentsResult = result;
 

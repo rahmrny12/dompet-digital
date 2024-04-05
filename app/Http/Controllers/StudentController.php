@@ -12,17 +12,6 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function classrooms()
-    {
-        $classrooms = Classroom::get();
-        return view('admin.student.classrooms', compact('classrooms'));
-    }
-
     public function index($id)
     {
         $selected_classroom = Classroom::find($id);
@@ -58,7 +47,6 @@ class StudentController extends Controller
             'gender' => 'required',
             // 'birthplace' => 'required',
             // 'birthdate' => 'required',
-            'parent_id' => 'required',
             'nfc_id' => 'required',
         ]);
 

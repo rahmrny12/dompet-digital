@@ -41,7 +41,7 @@
                                         <button type="button" class="btn btn-primary btn-sm"
                                             onclick="getEditPassword({{ $data->id }})" data-toggle="modal"
                                             data-target="#form-edit-password">
-                                            <i class="nav-icon fas fa-key"></i> &nbsp; Edit
+                                            <i class="nav-icon fas fa-key"></i> &nbsp; Edit Password
                                         </button>
                                         <button class="btn btn-danger btn-sm"><i class="nav-icon fas fa-trash-alt"></i>
                                             &nbsp; Hapus</button>
@@ -143,10 +143,9 @@
                 <div class="modal-body">
                     <form action="{{ route('parents.update-password') }}" method="post">
                         @csrf
-                        @method('put')
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="hidden" id="id" name="id">
+                                <input type="hidden" id="id_reset_password" name="id">
                                 <div id="real_password" class="mb-2">Password saat ini : -</div>
                                 <div class="form-group" id="form_password">
                                     <label for="password">Ganti Password</label>
@@ -238,7 +237,7 @@
                 success: function(result) {
                     if (result) {
                         $("#judul").text('Edit Password ');
-                        $("#id").val(result.id)
+                        $("#id_reset_password").val(result.id)
                         if (result.real_password) {
                             $("#real_password").html(`Password saat ini : <b>${result.real_password}</b>`)
                         }

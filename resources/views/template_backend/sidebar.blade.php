@@ -29,9 +29,15 @@
                         </a>
                         <ul class="nav nav-treeview ml-4">
                             <li class="nav-item">
-                                <a href="{{ route('students.classrooms') }}" class="nav-link" id="DataStudents">
-                                    <i class="fas fa-user-graduate nav-icon"></i>
-                                    <p>Siswa</p>
+                                <a href="{{ route('teachers.index') }}" class="nav-link" id="DataTeachers">
+                                    <i class="fas fa-users nav-icon"></i>
+                                    <p>Wali Kelas</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('classrooms.index') }}" class="nav-link" id="DataClassrooms">
+                                    <i class="fas fa-chalkboard-teacher nav-icon"></i>
+                                    <p>Data Kelas</p>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -41,21 +47,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('teachers.index') }}" class="nav-link" id="DataTeachers">
-                                    <i class="fas fa-users nav-icon"></i>
-                                    <p>Wali Kelas</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('classrooms.index') }}" class="nav-link" id="DataClassrooms">
-                                    <i class="fas fa-chalkboard-teacher nav-icon"></i>
-                                    <p>Kelas Siswa</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="{{ route('admins.index') }}" class="nav-link" id="DataAdmins">
                                     <i class="fas fa-users nav-icon"></i>
-                                    <p>Admin</p>
+                                    <p>User Admin</p>
                                 </a>
                             </li>
                         </ul>

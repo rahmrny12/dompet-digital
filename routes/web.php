@@ -37,15 +37,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pengaturan/ubah-profile', [UserController::class, 'ubah_profile'])->name('pengaturan.ubah-profile');
 
     /* --- */
-    Route::get('/students/classrooms', [StudentController::class, 'classrooms'])->name('students.classrooms');
-    Route::get('/students/classrooms/{id}', [StudentController::class, 'index'])->name('students.index');
+    Route::get('classrooms/{id}/students', [StudentController::class, 'index'])->name('students.index');
     Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::post('/students/setting', [StudentController::class, 'updateBalanceSetting'])->name('students.update-setting');
 
     Route::get('/students/{id}/json', [StudentController::class, 'getEdit']);
-    Route::get('/classrooms/{id}/students', [StudentController::class, 'getStudentsByClassroom']);
+    Route::get('/classrooms/{id}/students/json', [StudentController::class, 'getStudentsByClassroom']);
     Route::get('/students/{id}/setting', [StudentController::class, 'getBalanceSetting']);
 
     /* --- */

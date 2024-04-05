@@ -22,7 +22,6 @@
                             <th>No.</th>
                             <th>NIP</th>
                             <th>Nama Wali Kelas</th>
-                            <th>Email</th>
                             <th>Jenis Kelamin</th>
                             <th>Nomor Telepon</th>
                             <th>Aksi</th>
@@ -34,7 +33,6 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $data->nip }}</td>
                                 <td>{{ $data->name }}</td>
-                                <td>{{ $data->email }}</td>
                                 <td>{{ $data->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
                                 <td>{{ $data->phone }}</td>
                                 <td>
@@ -90,12 +88,6 @@
                                         class="form-control @error('name') is-invalid @enderror"
                                         placeholder="{{ __('Nama Wali Kelas') }}">
                                 </div>
-                                <div class="form-group" id="form_email">
-                                    <label for="email">Email</label>
-                                    <input type='text' id="email" name='email'
-                                        class="form-control @error('email') is-invalid @enderror"
-                                        placeholder="{{ __('Email') }}">
-                                </div>
                                 <div class="form-group">
                                     <label for="gender">Jenis Kelamin</label>
                                     <select id="gender" name="gender" class="form-control @error('gender') is-invalid @enderror">
@@ -131,11 +123,10 @@
         function getCreate() {
             $("#judul").text('Tambah Data Wali Kelas');
             $('#id').val('');
-            $('#nip').val('');
-            $('#name').val('');
-            $('#email').val('');
-            $('#gender').val('');
-            $('#phone').val('');
+            $('#nip').val("{{ old('nip') }}");
+            $('#name').val("{{ old('name') }}");
+            $('#gender').val("{{ old('gender') }}");
+            $('#phone').val("{{ old('phone') }}");
         }
 
         function getEdit(id) {
@@ -149,7 +140,6 @@
                         $('#id').val(result.id);
                         $('#nip').val(result.nip);
                         $('#name').val(result.name);
-                        $('#email').val(result.email);
                         $('#gender').val(result.gender);
                         $('#phone').val(result.phone);
                     }
