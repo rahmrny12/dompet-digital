@@ -30,9 +30,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         /* --- */
         Route::get('/dashboard', [DashboardController::class, 'index']);
-        Route::get('/announcement', [DashboardController::class, 'announcement']);
         /* --- */
-        Route::get('/transactions', [TransactionController::class, 'index']);
         Route::post('/transactions', [TransactionController::class, 'store']);
         /* --- */
         Route::get('/settings', [SettingController::class, 'show']);
@@ -40,6 +38,8 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::get('/students/{id}/balance', [StudentController::class, 'getStudentBalance']);
+    Route::get('/announcement', [DashboardController::class, 'announcement']);
+    Route::get('/transactions', [TransactionController::class, 'index']);
 
     Route::middleware(['role:parent'])->group(function () {
         /* --- */
