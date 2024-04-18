@@ -42,6 +42,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::post('/students/setting', [StudentController::class, 'updateBalanceSetting'])->name('students.update-setting');
+    Route::get('student/qr-code/{id}', [StudentController::class, 'qrCode'])->name('students.qr-code');
+
+    Route::get('classrooms/qr-code', [StudentController::class, 'qrCodeStudentByClassroom'])->name('students.qr-code.classrooms');
+    Route::get('student/qr-code/{id}/students', [StudentController::class, 'qrCodeAll'])->name('students.qr-code.all');
+    Route::get('student/qr-code/{id}/students/print', [StudentController::class, 'printQrCodeAll'])->name('students.qr-code.all.print');
 
     Route::get('/students/{id}/json', [StudentController::class, 'getEdit']);
     Route::get('/classrooms/{id}/students/json', [StudentController::class, 'getStudentsByClassroom']);

@@ -95,12 +95,12 @@ class ClassroomController extends Controller
      */
     public function destroy($id)
     {
-        $existStudents = Student::where('classroom_id', $id)->exists();
-        if ($existStudents) {
+        $existStudent = Student::where('classroom_id', $id)->exists();
+        if ($existStudent) {
             return redirect()->back()->with('warning', 'Kelas sudah digunakan');
         }
 
-        $result = Student::findorfail($id)->delete();
+        $result = Classroom::findorfail($id)->delete();
         if ($result) {
             return redirect()->back()->with('warning', 'Data kelas berhasil dihapus! (Silahkan cek trash data kelas)');
         }
@@ -110,14 +110,14 @@ class ClassroomController extends Controller
 
     public function trash()
     {
-        $students = Student::onlyTrashed()->get();
-        return view('admin.students.trash', compact('students'));
+        $classrooms = Classroom::onlyTrashed()->get();
+        return view('admin.classrooms.trash', compact('classrooms'));
     }
 
     public function restore($id)
     {
         $id = Crypt::decrypt($id);
-        $result = Student::withTrashed()->findorfail($id)->restore();
+        $result = Classroom::withTrashed()->findorfail($id)->restore();
         if ($result) {
             return redirect()->back()->with('info', 'Data kelas berhasil direstore! (Silahkan cek data kelas)');
         }
@@ -127,7 +127,7 @@ class ClassroomController extends Controller
 
     public function kill($id)
     {
-        $result = Student::withTrashed()->findorfail($id)->forceDelete();
+        $result = Classroom::withTrashed()->findorfail($id)->forceDelete();
         if ($result) {
             return redirect()->back()->with('success', 'Data kelas berhasil dihapus secara permanen');
         }

@@ -43,7 +43,7 @@ class AdminController extends Controller
             $data
         );
 
-        return redirect()->back()->with('success', 'Data wali murid berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Data admin berhasil diperbarui!');
     }
 
     public function getEdit(Request $request)

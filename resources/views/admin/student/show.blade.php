@@ -35,15 +35,11 @@
                     </div>
                     <div class="col-md-5">
                         <div class="d-flex flex-column align-items-end">
-                            <div style="background-image: url('{{ asset('img/card.png') }}'); background-size: contain; background-repeat: no-repeat; width: 350px"
-                                class="text-center">
-                                <h3 class="font-weight-bold my-4 text-truncate mx-4">{{ $student->name }}</h3>
-                                <h5>Saldo Kartu</h5>
-                                <h5 class="font-weight-bold">Rp.
-                                    {{ number_format($student->balance->current_balance ?? 0, 0, ',', '.') }}</h5>
-                                <h5>NFC ID</h5>
-                                <h5>{{ $student->nfc_id }}</h5>
-                            </div>
+                            {!! QrCode::size(256)->generate($student->nisn) !!}
+{{--
+                            <a href="{{ route('students.qr-code', $student->id) }}" class="btn btn-info btn-sm mt-4 mb-2 px-4">
+                                <i class="nav-icon fas fa-qrcode"></i> &nbsp; Download
+                            </a> --}}
                             <button type="button" class="btn btn-success btn-sm my-4 px-4"
                                 onclick="getBalanceSetting({{ $student->id }})" data-toggle="modal"
                                 data-target="#form-setting-card">

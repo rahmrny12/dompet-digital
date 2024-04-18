@@ -52,6 +52,12 @@
                                     <p>User Admin</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('students.qr-code.classrooms') }}" class="nav-link" id="DataQrCode">
+                                    <i class="fas fa-qrcode nav-icon"></i>
+                                    <p>Cetak QR Code Siswa</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
 

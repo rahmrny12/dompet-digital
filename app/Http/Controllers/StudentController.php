@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\StudentParent;
 use Crypt;
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class StudentController extends Controller
 {
@@ -47,7 +48,7 @@ class StudentController extends Controller
             'gender' => 'required',
             // 'birthplace' => 'required',
             // 'birthdate' => 'required',
-            'nfc_id' => 'required',
+            // 'nfc_id' => 'required',
         ]);
 
         Student::updateOrCreate(
@@ -62,7 +63,7 @@ class StudentController extends Controller
                 'birthplace' => $request->birthplace,
                 'birthdate' => $request->birthdate,
                 'parent_id' => $request->parent_id,
-                'nfc_id' => $request->nfc_id,
+                // 'nfc_id' => $request->nfc_id,
             ]
         );
 
@@ -188,5 +189,49 @@ class StudentController extends Controller
     {
         $students = Student::with('balance')->where('classroom_id', $id)->get();
         return response()->json($students);
+    }
+
+    public function qrCode($id)
+    {
+        $student = Student::find($id);
+
+        return response()->streamDownload(
+            function () use ($student) {
+                echo QrCode::size(200)
+                    ->format('png')
+                    ->generate($student->nisn);
+            },
+            'qr-code.png',
+            [
+                'Content-Type' => 'image/png',
+            ]
+        );
+
+    }
+
+    public function qrCodeStudentByClassroom()
+    {
+        $classrooms = Classroom::get();
+        return view('admin.qr_code.classrooms', compact('classrooms'));
+    }
+
+    public function qrCodeAll($id)
+    {
+        $selected_classroom = Classroom::find($id);
+
+        $students = Student::where('classroom_id', $id)->get();
+        $classrooms = Classroom::get();
+        $parents = StudentParent::get();
+        return view('admin.qr_code.index', compact('students', 'selected_classroom'));
+    }
+
+    public function printQrCodeAll($id)
+    {
+        $selected_classroom = Classroom::find($id);
+
+        $students = Student::where('classroom_id', $id)->get();
+        $classrooms = Classroom::get();
+        $parents = StudentParent::get();
+        return view('admin.qr_code.print_qr_code', compact('students', 'selected_classroom'));
     }
 }

@@ -12,6 +12,9 @@
                         data-target="#form-students">
                         <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Tambah Data Siswa
                     </button>
+                    <a href="{{ route('students.qr-code.all', $selected_classroom->id) }}" class="btn btn-secondary btn-sm">
+                        <i class="nav-icon fas fa-qrcode"></i> &nbsp; Print QR Code Siswa
+                    </a>
                 </h3>
             </div>
             <!-- /.card-header -->
@@ -136,12 +139,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group" id="form_name">
-                                    <label for="nfc_id">NFC ID</label>
-                                    <input type='text' id="nfc_id" name='nfc_id' value="{{ old('nfc_id') }}"
-                                        class="form-control @error('nfc_id') is-invalid @enderror"
-                                        placeholder="{{ __('NFC ID') }}">
-                                </div>
                             </div>
                         </div>
                 </div>
@@ -168,7 +165,6 @@
             $(`#gender`).val("{{ old('gender') }}");
             $('#classroom_id').val("{{ old('classroom_id') }}");
             $(`#parent_id`).val("{{ old('parent_id') }}").trigger('change');
-            $(`#nfc_id`).val("{{ old('nfc_id') }}");
         }
 
         function getEdit(id) {
@@ -187,7 +183,6 @@
                         $('#birthplace').val(result.birthplace);
                         $('#birthdate').val(result.birthdate);
                         $(`#parent_id`).val(result.parent_id).trigger('change');
-                        $('#nfc_id').val(result.nfc_id);
                     }
                 },
                 error: function() {
