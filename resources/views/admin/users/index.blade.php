@@ -25,12 +25,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($admins as $key => $data)
+                        @foreach ($users as $key => $data)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $data->name }}</td>
                                 <td>
-                                    <form action="{{ route('parents.destroy', $data->id) }}" method="post">
+                                    <form action="{{ route('users.destroy', $data->id) }}" method="post">
                                         @csrf
                                         @method('delete')
                                         <button type="button" class="btn btn-success btn-sm"
@@ -65,7 +65,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('admins.store') }}" method="post">
+                    <form action="{{ route('users.store') }}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
@@ -76,11 +76,11 @@
                                         class="form-control @error('name') is-invalid @enderror"
                                         placeholder="{{ __('Nama Admin') }}">
                                 </div>
-                                <div class="form-group" id="form_email">
-                                    <label for="email">Email</label>
-                                    <input type='text' id="email" name='email'
-                                        class="form-control @error('email') is-invalid @enderror"
-                                        placeholder="{{ __('Email') }}">
+                                <div class="form-group" id="form_username">
+                                    <label for="username">Username</label>
+                                    <input type='text' id="username" name='username'
+                                        class="form-control @error('username') is-invalid @enderror"
+                                        placeholder="{{ __('Username') }}">
                                 </div>
                                 <div class="form-group" id="form_password">
                                     <label for="password">Password</label>
@@ -110,7 +110,7 @@
             $("#judul").text('Tambah Data Admin');
             $('#id').val('');
             $('#name').val('');
-            $('#email').val('');
+            $('#username').val('');
             $('#password').val('');
         }
 
@@ -120,13 +120,13 @@
             $.ajax({
                 type: "GET",
                 dataType: "JSON",
-                url: `{{ url('/admins/${id}/json') }}`,
+                url: `{{ url('/users/${id}/json') }}`,
                 success: function(result) {
                     if (result) {
                         $("#judul").text('Edit Data Admin ' + result.name);
                         $("#id").val(result.id)
                         $("#name").val(result.name)
-                        $("#email").val(result.email)
+                        $("#username").val(result.username)
                         $("#password").val(result.real_password)
                     }
                 },
@@ -139,6 +139,6 @@
 
         $("#MasterData").addClass("active");
         $("#liMasterData").addClass("menu-open");
-        $("#DataAdmins").addClass("active");
+        $("#DataUsers").addClass("active");
     </script>
 @endsection

@@ -47,7 +47,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admins.index') }}" class="nav-link" id="DataAdmins">
+                                <a href="{{ route('users.index') }}" class="nav-link" id="DataUsers">
                                     <i class="fas fa-users nav-icon"></i>
                                     <p>User Admin</p>
                                 </a>

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
@@ -33,8 +32,6 @@ Route::middleware(['auth'])->group(function () {
 
     /* --- */
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-    Route::get('/pengaturan/profile', [UserController::class, 'edit_profile'])->name('pengaturan.profile');
-    Route::post('/pengaturan/ubah-profile', [UserController::class, 'ubah_profile'])->name('pengaturan.ubah-profile');
 
     /* --- */
     Route::get('classrooms/{id}/students', [StudentController::class, 'index'])->name('students.index');
@@ -68,8 +65,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/classrooms/{id}/json', [ClassroomController::class, 'getEdit']);
 
     /* --- */
-    Route::resource('/admins', AdminController::class);
-    Route::get('/admins/{id}/json', [AdminController::class, 'getEdit']);
+    Route::resource('/users', UserController::class);
+    Route::get('/users/{id}/json', [UserController::class, 'getEdit']);
 
     /* --- */
     Route::get('/transactions/classrooms', [TransactionController::class, 'classrooms'])->name('transactions.classrooms');

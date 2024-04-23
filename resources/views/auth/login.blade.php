@@ -7,7 +7,7 @@
         <form action="{{ route('login') }}" method="post">
             @csrf
             <div class="input-group mb-3">
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                <input id="email" type="text" class="form-control @error('email') is-invalid @enderror"
                     placeholder="{{ __('E-Mail Address') }}" name="email" value="{{ old('email') }}" autocomplete="off"
                     autofocus>
                 <div class="input-group-append">

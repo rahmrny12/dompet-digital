@@ -4,22 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AdminController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
-        $admins = User::whereRole('admin')->get();
+        $users = User::whereRole('admin')->get();
 
-        return view('admin.admins.index', compact('admins'));
+        return view('admin.users.index', compact('users'));
     }
 
     public function store(Request $request)
     {
         $rules = [
             'name' => 'required',
-            'email' => "required|unique:users,email,$request->id",
+            'username' => "required|unique:users,username,$request->id",
         ];
         if (empty($request->id)) {
             $rules['password'] = 'required';
@@ -28,10 +29,10 @@ class AdminController extends Controller
 
         $data = [
             'name' => $request->name,
-            'email' => $request->email,
+            'username' => $request->username,
             'role' => 'admin',
         ];
-        if(!empty($request->password)) {
+        if (!empty($request->password)) {
             $data['password'] = Hash::make($request->password);
             $data['real_password'] = $request->password;
         }
@@ -46,10 +47,26 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Data admin berhasil diperbarui!');
     }
 
+    public function destroy($id)
+    {
+        $user = User::findorfail($id);
+        if ($user->id == Auth::user()->id) {
+            $user->delete();
+            return redirect()->back()->with('warning', 'Data user berhasil dihapus! (Silahkan cek trash data user)');
+        } else {
+            return redirect()->back()->with('error', 'Maaf user ini bukan milik anda!');
+        }
+    }
+
     public function getEdit(Request $request)
     {
         $admin = User::find($request->id);
 
         return response()->json($admin);
+    }
+
+    public function profile()
+    {
+        return view('user.pengaturan');
     }
 }
