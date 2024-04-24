@@ -53,10 +53,10 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Rp.</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Isi ulang saldo" id="balance"
+                                    <input type="text" class="form-control " placeholder="Isi ulang saldo" id="balance"
                                         name="balance">
+                                    <button class="btn btn-outline-success" type="submit" id="button-addon2" style="border-top-left-radius: 0; border-bottom-left-radius: 0">Tambah</button>
                                 </div>
-                                <button type="submit" class="d-none">Submit</button>
                             </div>
                             <!-- /.card-body -->
                         </div>
