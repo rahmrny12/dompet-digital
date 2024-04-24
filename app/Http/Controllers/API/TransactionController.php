@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\StudentBalance;
 use App\Models\Transaction;
+use App\Models\Student;
 use App\Models\BalanceSetting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -49,13 +50,21 @@ class TransactionController extends Controller
             'total_payment' => 'required|int'
         ]);
 
-        $user_id = null;
-        if (auth()->user()->role)
-            $user_id = auth()->user()->id;
-
         $student_id = $request->student_id;
         $total_payment = $request->total_payment;
         $note = $request->note;
+
+        if (!Student::where('id', $student_id)->exists()) {
+            return response()->json([
+                'data' => null,
+                'message' => 'Siswa tidak ditemukan',
+                'status_code' => 404
+            ], 404);
+        }
+
+        $user_id = null;
+        if (auth()->user()->role)
+            $user_id = auth()->user()->id;
 
         try {
             $result = DB::transaction(function () use (
@@ -64,6 +73,7 @@ class TransactionController extends Controller
                 $total_payment,
                 $note
             ) {
+
                 $setting = BalanceSetting::where('student_id', $student_id)->first();
 
                 if ($setting) {
