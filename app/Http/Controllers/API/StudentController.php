@@ -82,7 +82,7 @@ class StudentController extends Controller
                 'data' => null,
                 'message' => 'Siswa tidak ditemukan',
                 'status_code' => 404
-            ]);
+            ], 404);
         }
 
         return response()->json([
