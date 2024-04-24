@@ -54,8 +54,10 @@ class StudentController extends Controller
         ]);
     }
 
-    public function getStudentBalance($id)
+    public function getStudentBalance($id, Request $request)
     {
+        $type = $request->type;
+
         $student = Student::select(
             'students.id as student_id',
             'students.name as student_name',
@@ -67,7 +69,13 @@ class StudentController extends Controller
         )->leftJoin('classrooms', 'classrooms.id', '=', 'students.classroom_id')
             ->leftJoin('student_balances', 'student_balances.student_id', '=', 'students.id')
             ->leftJoin('balance_settings', 'balance_settings.student_id', '=', 'students.id')
-            ->where('students.id', $id);
+            ->where(function($query) use ($type, $id) {
+                if ($type === 'nisn') {
+                    $query->where('students.nisn', $id);
+                } else {
+                    $query->where('students.id', $id);
+                }
+            });
 
         if (!$student->exists()) {
             return response()->json([
