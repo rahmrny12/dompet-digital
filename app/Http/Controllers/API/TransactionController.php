@@ -7,6 +7,7 @@ use App\Models\StudentBalance;
 use App\Models\Transaction;
 use App\Models\Student;
 use App\Models\BalanceSetting;
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

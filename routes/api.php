@@ -44,11 +44,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::middleware(['role:parent'])->group(function () {
         /* --- */
         Route::get('/students', [StudentController::class, 'getStudent']);
-        Route::post('/students/{id}/setting', [
-            StudentController::class,
-            'updateBala
-        nceSetting'
-        ]);
+        Route::post('/students/{id}/setting', [StudentController::class, 'updateBalanceSetting']);
         Route::post('/entry-balance', [StudentController::class, 'storeStudentBalance']);
         // Route::get('/students/{id}/setting', [StudentController::class, 'getBalanceSetting']);
     });

@@ -9,6 +9,7 @@ use App\Models\BalanceSetting;
 use App\Models\StudentBalance;
 use App\Models\StudentParent;
 use App\Models\RechargeHistory;
+use App\Models\Setting;
 use Crypt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -109,15 +110,24 @@ class StudentController extends Controller
                 $oldBalance = 0;
                 $newBalance = $insertedBalance;
 
+                $setting = Setting::first();
+                $serviceCharge = 0;
+                if ($setting) {
+                    $serviceCharge = $setting->value('service_charge');
+                }
+
                 if ($studentBalance) {
                     $oldBalance = $studentBalance->current_balance;
                     $newBalance += $oldBalance;
                 }
 
+                $newBalance -= $serviceCharge;
+
                 RechargeHistory::create([
                     'user_id' => auth()->user()->id,
                     'student_id' => $studentId,
                     'amount' => $insertedBalance,
+                    'service_charge' => $serviceCharge,
                     'current_balance' => $oldBalance,
                     'updated_balance' => $newBalance,
                 ]);
@@ -139,6 +149,7 @@ class StudentController extends Controller
 
                 $studentBalance['old_balance'] = (int) $oldBalance;
                 $studentBalance['inserted_balance'] = (int) $insertedBalance;
+                $studentBalance['service_charge'] = (int) $serviceCharge;
 
                 return response()->json([
                     'data' => new StudentBalanceResource($studentBalance),

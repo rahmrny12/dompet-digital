@@ -18,6 +18,7 @@ class StudentBalanceResource extends JsonResource
             'student_id' => $this->student_id,
             'inserted_balance' => $this->inserted_balance,
             'old_balance' => $this->old_balance,
+            'service_charge' => $this->service_charge,
             'updated_balance' => $this->current_balance,
         ];
     }

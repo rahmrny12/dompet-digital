@@ -48,6 +48,11 @@
                     <div class="col-md-12 col-lg-6">
                         <div class="card">
                             <div class="card-body">
+                                <div class="text-right mb-3">
+                                    <span class="text-sm">Dipotong biaya layanan sebesar : <span
+                                            class="font-weight-bold text-warning">Rp.
+                                            {{ number_format($service_charge, 0, ',', '.') }}</span></span>
+                                </div>
                                 <h5 class="text-lg">Saldo Saat Ini : <span id="current_balance">-</span></h5>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -55,7 +60,8 @@
                                     </div>
                                     <input type="text" class="form-control " placeholder="Isi ulang saldo" id="balance"
                                         name="balance">
-                                    <button class="btn btn-outline-success" type="submit" id="button-addon2" style="border-top-left-radius: 0; border-bottom-left-radius: 0">Tambah</button>
+                                    <button class="btn btn-outline-success" type="submit" id="button-addon2"
+                                        style="border-top-left-radius: 0; border-bottom-left-radius: 0">Tambah</button>
                                 </div>
                             </div>
                             <!-- /.card-body -->
@@ -169,7 +175,12 @@
             const studentId = $('#student_id').val();
             const currentBalance = studentsResult.find((item) => item['id'] == studentId)?.balance?.current_balance ?? 0;
 
-            $('#current_balance').html('Rp. ' + currentBalance)
+            var formattedBalance = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR'
+            }).format(currentBalance);
+
+            $('#current_balance').html('Rp. ' + formattedBalance)
             if (currentBalance == 0) {
                 $('#current_balance').addClass('text-danger').removeClass('text-success')
             } else {

@@ -20,18 +20,18 @@
                                         <span class="input-group-text">Rp.</span>
                                     </div>
                                     <input type="text" class="form-control" placeholder="Service Charge"
-                                        id="service_charge" name="service_charge" value="{{ $setting->service_charge ?? null }}">
+                                        id="service_charge" name="service_charge"
+                                        value="{{ $setting->service_charge ?? null }}">
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer justify-content-end">
                 <button type="submit" class="btn btn-primary"><i class="nav-icon fas fa-save"></i> &nbsp;
                     Simpan</button>
-                </form>
             </div>
+            </form>
         </div>
     </div>
 
