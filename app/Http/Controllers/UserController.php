@@ -50,8 +50,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findorfail($id);
-        $user->delete();
-        return redirect()->back()->with('warning', 'Data user berhasil dihapus! (Silahkan cek trash data user)');
+        if ($user->id == 1) {
+            return redirect()->back()->with('error', 'User ini adalah admin utama.');
+        } else {
+            $user->delete();
+            return redirect()->back()->with('warning', 'Data user berhasil dihapus! (Silahkan cek trash data user)');
+        }
     }
 
     public function getEdit(Request $request)
