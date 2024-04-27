@@ -40,6 +40,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/students/{id}/balance', [StudentController::class, 'getStudentBalance']);
     Route::get('/announcement', [DashboardController::class, 'announcement']);
     Route::get('/transactions', [TransactionController::class, 'index']);
+    Route::get('/service-charge', [SettingController::class, 'getServiceCharge']);
 
     Route::middleware(['role:parent'])->group(function () {
         /* --- */

@@ -19,7 +19,7 @@ class TransactionController extends Controller
     {
         $limitPerPage = $request->limit ?? 5;
 
-        $transactions = Transaction::select( 'students.id as student_id', 'students.name', 'classrooms.id as classroom_id', 'transactions.total_payment', 'transactions.note', 'users.id as admin_id', 'users.name as admin', 'transactions.created_at as transaction_date')
+        $transactions = Transaction::select('students.id as student_id', 'students.name', 'classrooms.id as classroom_id', 'transactions.total_payment', 'transactions.note', 'users.id as admin_id', 'users.name as admin', 'transactions.created_at as transaction_date')
             ->join('users', 'user_id', 'users.id')
             ->join('students', 'student_id', 'students.id')
             ->join('classrooms', 'students.classroom_id', 'classrooms.id')
@@ -68,12 +68,7 @@ class TransactionController extends Controller
             $user_id = auth()->user()->id;
 
         try {
-            $result = DB::transaction(function () use (
-                $user_id,
-                $student_id,
-                $total_payment,
-                $note
-            ) {
+            $result = DB::transaction(function () use ($user_id, $student_id, $total_payment, $note) {
 
                 $setting = BalanceSetting::where('student_id', $student_id)->first();
 

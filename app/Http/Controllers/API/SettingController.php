@@ -49,4 +49,19 @@ class SettingController extends Controller
             'status_code' => 200
         ]);
     }
+
+    public function getServiceCharge()
+    {
+        $setting = Setting::first();
+        $data['service_charge'] = 0;
+        if ($setting) {
+            $data['service_charge'] = $setting->value('service_charge');
+        }
+
+        return response()->json([
+            'data' => $data,
+            'message' => 'Berhasil',
+            'status_code' => 200
+        ]);
+    }
 }
