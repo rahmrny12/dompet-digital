@@ -128,7 +128,6 @@ class StudentParentController extends Controller
         try {
             $result = DB::transaction(function () use ($id, $password) {
                 $user_id = StudentParent::select('user_id')->find($id);
-                dd($user_id);
 
                 User::where('id', $user_id)->update(['password' => Hash::make($password), 'real_password' => $password]);
 
