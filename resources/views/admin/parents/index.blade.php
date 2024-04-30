@@ -12,6 +12,9 @@
                         data-target="#form-parents">
                         <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Tambah Data Wali Murid
                     </button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#importExcel">
+                        <i class="nav-icon fas fa-file-import"></i> &nbsp; IMPORT EXCEL
+                    </button>
                 </h3>
             </div>
             <!-- /.card-header -->
@@ -57,6 +60,31 @@
         <!-- /.card -->
     </div>
     <!-- /.col -->
+
+    {{-- Import Excel Modal --}}
+    <div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form method="post" action="{{ route('parents.import-excel') }}" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <label>Pilih file excel</label>
+                        <div class="form-group">
+                            <input type="file" name="file" required="required">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Extra large modal -->
     <div class="modal fade bd-example-modal-md" id="form-parents" tabindex="-1" role="dialog"

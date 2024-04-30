@@ -38,6 +38,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+    Route::post(
+        '/students/import-excel',
+        [StudentController::class, 'importExcel']
+    )->name('students.import-excel');
     Route::post('/students/setting', [StudentController::class, 'updateBalanceSetting'])->name('students.update-setting');
     Route::get('student/qr-code/{id}', [StudentController::class, 'qrCode'])->name('students.qr-code');
 
@@ -57,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/parents', StudentParentController::class);
     Route::post('/parents/update-password', [StudentParentController::class, 'updatePassword'])->name('parents.update-password');
     Route::get('/parents/{id}/json', [StudentParentController::class, 'getEdit']);
+    Route::post('/parents/import-excel', [StudentParentController::class, 'importExcel'])->name('parents.import-excel');
     Route::get('/parents/{id}/password/json', [StudentParentController::class, 'getEditPassword']);
     Route::get('/available-students/json', [StudentParentController::class, 'getAvailableStudents']);
 
