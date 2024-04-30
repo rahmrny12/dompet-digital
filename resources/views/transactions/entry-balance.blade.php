@@ -180,7 +180,7 @@
                 currency: 'IDR'
             }).format(currentBalance);
 
-            $('#current_balance').html('Rp. ' + formattedBalance)
+            $('#current_balance').html(formattedBalance)
             if (currentBalance == 0) {
                 $('#current_balance').addClass('text-danger').removeClass('text-success')
             } else {

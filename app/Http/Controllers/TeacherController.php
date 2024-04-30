@@ -6,6 +6,8 @@ use App\Models\Classroom;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\TeacherImport;
 
 class TeacherController extends Controller
 {
@@ -133,5 +135,17 @@ class TeacherController extends Controller
     {
         $teacher = Teacher::select('id', 'nip', 'name', 'gender', 'phone')->where('id', $request->id)->first();
         return response()->json($teacher);
+    }
+
+    public function importExcel(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:csv,xls,xlsx'
+        ]);
+        $file = $request->file('file');
+        $nama_file = rand() . $file->getClientOriginalName();
+        $file->move('excel_file/teacher', $nama_file);
+        Excel::import(new TeacherImport, public_path('/excel_file/teacher/' . $nama_file));
+        return redirect()->back()->with('success', 'Data Kelas Berhasil Diimport!');
     }
 }

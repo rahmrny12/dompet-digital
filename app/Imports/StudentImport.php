@@ -6,8 +6,8 @@ use App\Models\Student;
 use App\Models\StudentParent;
 use App\Models\Classroom;
 use App\Models\User;
-use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Carbon\Carbon;
 use Exception;
 
 class StudentImport implements ToModel
@@ -19,9 +19,27 @@ class StudentImport implements ToModel
      */
     public function model(array $row)
     {
+        $user = User::where('username', $row[6])->exists();
+        if ($user) {
+            $parent = StudentParent::join('users', 'users.id', 'student_parents.user_id')->where('users.username', $row[6])->first();
+        } else {
+            $user = User::create([
+                'name' => $row[9] ?? $row[6],
+                'username' => $row[6],
+                'password' => Hash::make($row[8]),
+                'real_password' => $row[8],
+                'role' => 'parent',
+            ]);
+
+            $parent = StudentParent::create([
+                'user_id' => $user->id,
+                'name' => $row[9] ?? $row[6],
+            ]);
+        }
+
+        /* -------------- */
+
         $classroom = Classroom::where('name', $row[5])->first();
-        $user = User::join('student_parents', 'users.id', 'student_parents.user_id')
-            ->where('username', $row[6])->first();
 
         $monthNames = [
             'Januari' => 'January',
@@ -56,7 +74,7 @@ class StudentImport implements ToModel
             'birthplace' => $row[3],
             'birthdate' => $date,
             'classroom_id' => $classroom->id ?? null,
-            'parent_id' => $user->id,
+            'parent_id' => $parent->id,
         ]);
     }
 }

@@ -56,12 +56,15 @@ Route::middleware(['auth'])->group(function () {
     /* --- */
     Route::resource('/teachers', TeacherController::class);
     Route::get('/teachers/{id}/json', [TeacherController::class, 'getEdit']);
+    Route::post(
+        '/teachers/import-excel',
+        [TeacherController::class, 'importExcel']
+    )->name('teachers.import-excel');
 
     /* --- */
     Route::resource('/parents', StudentParentController::class);
     Route::post('/parents/update-password', [StudentParentController::class, 'updatePassword'])->name('parents.update-password');
     Route::get('/parents/{id}/json', [StudentParentController::class, 'getEdit']);
-    Route::post('/parents/import-excel', [StudentParentController::class, 'importExcel'])->name('parents.import-excel');
     Route::get('/parents/{id}/password/json', [StudentParentController::class, 'getEditPassword']);
     Route::get('/available-students/json', [StudentParentController::class, 'getAvailableStudents']);
 
