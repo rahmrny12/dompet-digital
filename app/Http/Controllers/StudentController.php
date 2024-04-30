@@ -7,9 +7,11 @@ use App\Models\Student;
 use App\Models\Classroom;
 use App\Models\Transaction;
 use App\Models\StudentParent;
+use App\Imports\StudentImport;
 use Crypt;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
@@ -233,5 +235,17 @@ class StudentController extends Controller
         $classrooms = Classroom::get();
         $parents = StudentParent::get();
         return view('admin.qr_code.print_qr_code', compact('students', 'selected_classroom'));
+    }
+
+    public function importExcel(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:csv,xls,xlsx'
+        ]);
+        $file = $request->file('file');
+        $nama_file = rand() . $file->getClientOriginalName();
+        $file->move('excel_file/student', $nama_file);
+        Excel::import(new StudentImport, public_path('/excel_file/student/' . $nama_file));
+        return redirect()->back()->with('success', 'Data Kelas Berhasil Diimport!');
     }
 }

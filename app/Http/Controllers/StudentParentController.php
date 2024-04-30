@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\StudentParent;
 use App\Models\Student;
 use App\Models\User;
+use App\Imports\ParentImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentParentController extends Controller
 {
@@ -234,5 +236,17 @@ class StudentParentController extends Controller
     {
         $students = Student::where('parent_id', null)->get();
         return response()->json($students);
+    }
+
+    public function importExcel(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:csv,xls,xlsx'
+        ]);
+        $file = $request->file('file');
+        $nama_file = rand() . $file->getClientOriginalName();
+        $file->move('excel_file/parent', $nama_file);
+        Excel::import(new ParentImport, public_path('/excel_file/parent/' . $nama_file));
+        return redirect()->back()->with('success', 'Data Wali Murid Berhasil Diimport!');
     }
 }
