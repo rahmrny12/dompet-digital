@@ -7,6 +7,7 @@ use App\Models\StudentParent;
 use App\Models\Classroom;
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Exception;
 

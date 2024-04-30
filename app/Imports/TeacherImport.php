@@ -5,7 +5,6 @@ namespace App\Imports;
 use App\Models\StudentParent;
 use App\Models\User;
 use App\Models\Teacher;
-use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class TeacherImport implements ToModel
