@@ -12,6 +12,7 @@
             <thead>
                 <tr>
                     <th>No.</th>
+                    <th>Waktu Transaksi</th>
                     <th>NISN</th>
                     <th>Nama Siswa</th>
                     <th>Nominal</th>
@@ -23,6 +24,7 @@
                 @foreach ($transactions as $key => $data)
                 <tr>
                     <td>{{ $key + 1 }}</td>
+                    <td>{{ $data->created_at }}</td>
                     <td>{{ $data->nisn }}</td>
                     <td>{{ $data->name }}</td>
                     <td>Rp. {{ number_format($data->total_payment, 0, ',', '.') }}</td>

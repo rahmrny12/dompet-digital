@@ -25,7 +25,7 @@ class TransactionController extends Controller
     public function index($id)
     {
         $classroom = Classroom::find($id)->first();
-        $transactions = Transaction::select('students.nisn', 'students.name', 'transactions.total_payment', 'transactions.note', 'users.name as admin')
+        $transactions = Transaction::select('transactions.created_at', 'students.nisn', 'students.name', 'transactions.total_payment', 'transactions.note', 'users.name as admin')
             ->join('users', 'user_id', 'users.id')
             ->join('students', 'student_id', 'students.id')
             ->join('classrooms', 'students.classroom_id', 'classrooms.id')
@@ -39,7 +39,6 @@ class TransactionController extends Controller
         $from_date = $request->from_date ?: now();
         $to_date = $request->to_date ?: now();
 
-        // $recharge = RechargeHistory::whereMonth('created_at', $currentMonth)->get();
         $recharge = RechargeHistory::with('student')
             ->whereDate('created_at', '>=', $from_date)
             ->whereDate('created_at', '<=', $to_date)
