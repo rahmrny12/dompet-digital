@@ -81,6 +81,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transactions/classrooms/{id}', [TransactionController::class, 'index'])->name('transactions');
     Route::get('/entry-balance', [StudentBalanceController::class, 'entryStudentBalance'])->name('transactions.entry-balance');
     Route::post('/entry-balance', [StudentBalanceController::class, 'storeStudentBalance'])->name('transactions.entry-balance');
+    Route::get('/transactions/report', [TransactionController::class, 'report'])->name('transactions.report');
 
     /* --- */
     Route::get('/settings', [SettingController::class, 'show'])->name('settings');

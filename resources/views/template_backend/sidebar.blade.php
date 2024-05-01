@@ -74,6 +74,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('transactions.report') }}" class="nav-link" id="Report">
+                            <i class="nav-icon fas fa-file-alt"></i>
+                            <p>Laporan Belanja Siswa</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('settings') }}" class="nav-link" id="Settings">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Pengaturan</p>

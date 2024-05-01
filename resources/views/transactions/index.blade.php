@@ -6,13 +6,6 @@
 @section('content')
 <div class="col-md-12">
     <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">
-              <a href="{{ route('transactions.entry-balance') }}" class="btn btn-primary btn-sm">
-                  <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Input Saldo Siswa
-              </a>
-          </h3>
-        </div>
         <!-- /.card-header -->
         <div class="card-body">
           <table id="example1" class="table table-bordered table-striped table-hover">
