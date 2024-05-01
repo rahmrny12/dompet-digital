@@ -72,6 +72,23 @@
                     </div>
                     <div class="modal-body">
                         @csrf
+                        <div class="card card-outline card-primary">
+                            <div class="card-header">
+                                <h5 class="modal-title">Petunjuk :</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <li>rows 1 = NISN</li>
+                                    <li>rows 2 = Jenis Kelamin (L/P)</li>
+                                    <li>rows 3 = Tempat Lahir</li>
+                                    <li>rows 4 = Tanggal Lahir</li>
+                                    <li>rows 5 = Nama Kelas</li>
+                                    <li>rows 6 = Username Wali Murid</li>
+                                    <li>rows 7 = Kata Sandi Wali Murid</li>
+                                    <li>rows 8 = Nama Wali Murid</li>
+                                </ul>
+                            </div>
+                        </div>
                         <label>Pilih file excel</label>
                         <div class="form-group">
                             <input type="file" name="file" required="required">

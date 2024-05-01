@@ -25,16 +25,16 @@ class StudentImport implements ToModel
             $parent = StudentParent::join('users', 'users.id', 'student_parents.user_id')->where('users.username', $row[6])->first();
         } else {
             $user = User::create([
-                'name' => $row[9] ?? $row[6],
+                'name' => $row[8] ?? $row[6],
                 'username' => $row[6],
-                'password' => Hash::make($row[8]),
-                'real_password' => $row[8],
+                'password' => Hash::make($row[7]),
+                'real_password' => $row[7],
                 'role' => 'parent',
             ]);
 
             $parent = StudentParent::create([
                 'user_id' => $user->id,
-                'name' => $row[9] ?? $row[6],
+                'name' => $row[8] ?? $row[6],
             ]);
         }
 

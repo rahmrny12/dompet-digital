@@ -12,7 +12,8 @@
                         data-target="#form-teachers">
                         <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Tambah Data Wali Kelas
                     </button>
-                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#importTeacherExcel">
+                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                        data-target="#importTeacherExcel">
                         <i class="nav-icon fas fa-file-import"></i> &nbsp; IMPORT EXCEL
                     </button>
                 </h3>
@@ -23,7 +24,7 @@
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>NIP</th>
+                            <th>NUPK</th>
                             <th>Nama Wali Kelas</th>
                             <th>Jenis Kelamin</th>
                             <th>Nomor Telepon</th>
@@ -73,6 +74,19 @@
                     </div>
                     <div class="modal-body">
                         @csrf
+                        <div class="card card-outline card-primary">
+                            <div class="card-header">
+                                <h5 class="modal-title">Petunjuk :</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <li>rows 1 = NUPK</li>
+                                    <li>rows 2 = Name</li>
+                                    <li>rows 3 = Gender (L/P)</li>
+                                    <li>rows 4 = Phone</li>
+                                </ul>
+                            </div>
+                        </div>
                         <label>Pilih file excel</label>
                         <div class="form-group">
                             <input type="file" name="file" required="required">
@@ -105,10 +119,10 @@
                             <div class="col-md-12">
                                 <input type="hidden" id="id" name="id">
                                 <div class="form-group" id="form_nip">
-                                    <label for="nip">NIP</label>
+                                    <label for="nip">NUPK</label>
                                     <input type='text' id="nip" name='nip'
                                         class="form-control @error('nip') is-invalid @enderror"
-                                        placeholder="{{ __('NIP') }}">
+                                        placeholder="{{ __('NUPK') }}">
                                 </div>
                                 <div class="form-group" id="form_name">
                                     <label for="name">Nama Wali Kelas</label>
@@ -118,12 +132,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="gender">Jenis Kelamin</label>
-                                    <select id="gender" name="gender" class="form-control @error('gender') is-invalid @enderror">
+                                    <select id="gender" name="gender"
+                                        class="form-control @error('gender') is-invalid @enderror">
                                         <option value="">-- Pilih Jenis Kelamin --</option>
                                         <option value="L">Laki-laki</option>
                                         <option value="P">Perempuan</option>
                                     </select>
-                                  </div>
+                                </div>
                                 <div class="form-group" id="form_phone">
                                     <label for="phone">Nomor Telepon</label>
                                     <input type='text' id="phone" name='phone'
