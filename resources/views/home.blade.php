@@ -50,7 +50,7 @@
                 <div class="icon">
                   <i class="fas fa-user"></i>
                 </div>
-                <a href="{{ route('parents.index') }}"  class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('teachers.index') }}"  class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->

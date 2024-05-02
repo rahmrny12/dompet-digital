@@ -33,8 +33,7 @@
                 <strong>Copyright &copy;
                     <script>
                         document.write(new Date().getFullYear());
-                    </script> &diams; <a href="http://piramidsoft.com/" style="color: white;">SMK
-                        Muhammadiyah Lumajang</a>.
+                    </script> &diams; <a href="http://piramidsoft.com/" style="color: white;">SD Kreatif</a>.
                 </strong>
             </marquee>
         </footer>
@@ -122,7 +121,7 @@
 
     @error('id_card')
         <script>
-            toastr.error("Maaf User ini tidak terdaftar sebagai Guru SMK MUHAMMADIYAH LUMAJANG!");
+            toastr.error("Maaf User ini tidak terdaftar sebagai Guru SD Kreatif!");
         </script>
     @enderror
     @error('guru')
@@ -132,7 +131,7 @@
     @enderror
     @error('no_induk')
         <script>
-            toastr.error("Maaf User ini tidak terdaftar sebagai Siswa SMK MUHAMMADIYAH LUMAJANG!");
+            toastr.error("Maaf User ini tidak terdaftar sebagai Siswa SMK SD Kreatif!");
         </script>
     @enderror
     @error('siswa')
