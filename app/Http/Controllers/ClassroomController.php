@@ -17,9 +17,10 @@ class ClassroomController extends Controller
      */
     public function index()
     {
-        $classrooms = Classroom::get();
-        $teachers = Teacher::get();
-        return view('admin.classroom.index', compact('classrooms', 'teachers'));
+        $teachers = Teacher::with('classroom')->get();
+
+        $classrooms = Classroom::with('teacher')->get();
+        return view('admin.classrooms.index', compact('classrooms', 'teachers'));
     }
 
     /**
@@ -43,12 +44,10 @@ class ClassroomController extends Controller
         if ($request->id != null) {
             $this->validate($request, [
                 'name' => 'required',
-                'teacher_id' => 'required',
             ]);
         } else {
             $this->validate($request, [
                 'name' => 'required|unique:classrooms',
-                'teacher_id' => 'required',
             ]);
         }
 

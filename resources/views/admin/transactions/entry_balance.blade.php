@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    <a href="{{ route('transactions.classrooms') }}" class="btn btn-primary btn-sm">
+                    <a href="{{ route('transactions.index') }}" class="btn btn-primary btn-sm">
                         <i class="nav-icon fas fa-money-check"></i> &nbsp; Histori Belanja Siswa
                     </a>
                 </h3>

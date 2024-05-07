@@ -12,7 +12,10 @@
                         data-target="#form-classrooms">
                         <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Tambah Data Kelas
                     </button>
-                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#importStudentExcel">
+                    <a href="{{ route('students.export-excel') }}" class="btn btn-success btn-sm my-3"
+                        target="_blank"><i class="nav-icon fas fa-file-export"></i> &nbsp; EXPORT EXCEL</a>
+                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                        data-target="#importStudentExcel">
                         <i class="nav-icon fas fa-file-import"></i> &nbsp; IMPORT EXCEL
                     </button>
                 </h3>
@@ -154,14 +157,34 @@
 
 @section('script')
     <script>
+        var teachersData = @json($teachers);
+
         function getCreate() {
             $("#judul").text('Tambah Data Kelas');
             $('#id').val('');
-            $('#name').val('');
-            $('#teacher_id').val('');
+            $('#name').val("{{ old('name') }}");
+            $('#teacher_id').empty();
+            $.each(teachersData, function(index, el) {
+                if (!el.classroom) {
+                    $('#teacher_id').append($('<option>', {
+                        value: el.id,
+                        text: el.name
+                    }));
+                }
+            });
+            $('#teacher_id option').removeAttr("selected").trigger('change');
         }
 
         function getEdit(id) {
+            $('#teacher_id option').removeAttr("selected").trigger('change');
+            $('#teacher_id').empty();
+            $.each(teachersData, function(index, el) {
+                $('#teacher_id').append($('<option>', {
+                    value: el.id,
+                    text: el.name
+                }));
+            });
+
             $.ajax({
                 type: "GET",
                 dataType: "JSON",
@@ -171,7 +194,8 @@
                         $("#judul").text('Edit Data Kelas ' + result.name);
                         $('#id').val(result.id);
                         $('#name').val(result.name);
-                        $('#teacher_id').val(result.teacher_id);
+                        $(`#teacher_id option[value=${result.teacher_id}]`).attr('selected', 'selected')
+                            .trigger('change');
                     }
                 },
                 error: function() {

@@ -7,11 +7,15 @@ use App\Models\Student;
 use App\Models\Classroom;
 use App\Models\Transaction;
 use App\Models\StudentParent;
+use App\Models\RechargeHistory;
+use App\Models\StudentBalance;
 use App\Imports\StudentImport;
+use App\Exports\StudentExport;
 use Crypt;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class StudentController extends Controller
 {
@@ -22,7 +26,7 @@ class StudentController extends Controller
         $students = Student::where('classroom_id', $id)->get();
         $classrooms = Classroom::get();
         $parents = StudentParent::get();
-        return view('admin.student.index', compact('students', 'classrooms', 'parents', 'selected_classroom'));
+        return view('admin.students.index', compact('students', 'classrooms', 'parents', 'selected_classroom'));
     }
 
     /**
@@ -82,7 +86,7 @@ class StudentController extends Controller
     {
         $id = Crypt::decrypt($id);
         $student = Student::with('balance')->find($id);
-        return view('admin.student.show', compact('student'));
+        return view('admin.students.show', compact('student'));
     }
 
     /**
@@ -136,7 +140,10 @@ class StudentController extends Controller
 
     public function kill($id)
     {
-        $result = Student::withTrashed()->findorfail($id)->forceDelete();
+        $student = Student::withTrashed()->findorfail($id);
+        RechargeHistory::where('student_id', $student->id)->delete();
+        StudentBalance::where('student_id', $student->id)->delete();
+        $result = $student->forceDelete();
         if ($result) {
             return redirect()->back()->with('success', 'Data siswa berhasil dihapus secara permanen');
         }
@@ -247,5 +254,11 @@ class StudentController extends Controller
         $file->move('excel_file/student', $nama_file);
         Excel::import(new StudentImport, public_path('/excel_file/student/' . $nama_file));
         return redirect()->back()->with('success', 'Data Kelas Berhasil Diimport!');
+    }
+
+    public function exportExcel()
+    {
+        $date = Carbon::now()->toDateString();
+        return Excel::download(new StudentExport(), "data-absensi-guru-$date.xlsx");
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\StudentBalanceController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StudentParentController;
+use App\Http\Controllers\ClassAdvisorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +43,10 @@ Route::middleware(['auth'])->group(function () {
         '/students/import-excel',
         [StudentController::class, 'importExcel']
     )->name('students.import-excel');
+    Route::get(
+        '/students/excel/export',
+        [StudentController::class, 'exportExcel']
+    )->name('students.export-excel');
     Route::post('/students/setting', [StudentController::class, 'updateBalanceSetting'])->name('students.update-setting');
     Route::get('student/qr-code/{id}', [StudentController::class, 'qrCode'])->name('students.qr-code');
 
@@ -56,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
     /* --- */
     Route::resource('/teachers', TeacherController::class);
     Route::get('/teachers/{id}/json', [TeacherController::class, 'getEdit']);
+    Route::resource('/class-advisors', ClassAdvisorController::class);
+    Route::get('/class-advisors/{id}/json', [ClassAdvisorController::class, 'getEdit']);
     Route::post(
         '/teachers/import-excel',
         [TeacherController::class, 'importExcel']
@@ -77,13 +84,30 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/{id}/json', [UserController::class, 'getEdit']);
 
     /* --- */
-    Route::get('/transactions/classrooms', [TransactionController::class, 'classrooms'])->name('transactions.classrooms');
-    Route::get('/transactions/classrooms/{id}', [TransactionController::class, 'index'])->name('transactions');
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/entry-balance', [StudentBalanceController::class, 'entryStudentBalance'])->name('transactions.entry-balance');
     Route::post('/entry-balance', [StudentBalanceController::class, 'storeStudentBalance'])->name('transactions.entry-balance');
-    Route::get('/transactions/report', [TransactionController::class, 'report'])->name('transactions.report');
+    Route::get('/balances/report', [StudentBalanceController::class, 'balanceReport'])->name('transactions.balance-report');
+    Route::get('/balances/report/print', [StudentBalanceController::class, 'printBalanceReport'])->name('transactions.balance-report.print');
 
     /* --- */
     Route::get('/settings', [SettingController::class, 'show'])->name('settings');
     Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
+
+    /* --- */
+    Route::get('/teachers/trash/all', [TeacherController::class, 'trash'])->name('teachers.trash');
+    Route::get('/teachers/restore/{id}', [TeacherController::class, 'restore'])->name('teachers.restore');
+    Route::delete('/teachers/kill/{id}', [TeacherController::class, 'kill'])->name('teachers.kill');
+    Route::get('/classrooms/trash/all', [ClassroomController::class, 'trash'])->name('classrooms.trash');
+    Route::get('/classrooms/restore/{id}', [ClassroomController::class, 'restore'])->name('classrooms.restore');
+    Route::delete('/classrooms/kill/{id}', [ClassroomController::class, 'kill'])->name('classrooms.kill');
+    Route::get('/parents/trash/all', [StudentParentController::class, 'trash'])->name('parents.trash');
+    Route::get('/parents/restore/{id}', [StudentParentController::class, 'restore'])->name('parents.restore');
+    Route::delete('/parents/kill/{id}', [StudentParentController::class, 'kill'])->name('parents.kill');
+    Route::get('/students/trash/all', [StudentController::class, 'trash'])->name('students.trash');
+    Route::get('/students/restore/{id}', [StudentController::class, 'restore'])->name('students.restore');
+    Route::delete('/students/kill/{id}', [StudentController::class, 'kill'])->name('students.kill');
+
+    Route::patch('/fcm-token', [HomeController::class, 'updateToken'])->name('fcmToken');
+    Route::post('/send-notification', [HomeController::class, 'notification'])->name('notification');
 });

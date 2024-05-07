@@ -22,7 +22,7 @@ class StudentBalanceController extends Controller
             $service_charge = $setting->value('service_charge');
         }
 
-        return view('transactions.entry-balance', compact('classrooms', 'service_charge'));
+        return view('admin.transactions.entry_balance', compact('classrooms', 'service_charge'));
     }
 
     public function storeStudentBalance(Request $request)
@@ -64,5 +64,31 @@ class StudentBalanceController extends Controller
         );
 
         return redirect()->back()->with('success', 'Data siswa berhasil diperbarui!');
+    }
+
+    public function balanceReport(Request $request)
+    {
+        $from_date = $request->from_date ?: now();
+        $to_date = $request->to_date ?: now();
+
+        $recharge = RechargeHistory::with('student')
+            ->whereDate('created_at', '>=', $from_date)
+            ->whereDate('created_at', '<=', $to_date)
+            ->get();
+
+        return view('admin.transactions.balance_report', compact('recharge'));
+    }
+
+    public function printBalanceReport(Request $request)
+    {
+        $from_date = $request->from_date ?: now();
+        $to_date = $request->to_date ?: now();
+
+        $recharge = RechargeHistory::with('student')
+            ->whereDate('created_at', '>=', $from_date)
+            ->whereDate('created_at', '<=', $to_date)
+            ->get();
+
+        return view('admin.transactions.print_balance_report', compact('recharge'));
     }
 }

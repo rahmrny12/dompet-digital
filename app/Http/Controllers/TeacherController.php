@@ -18,8 +18,8 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $teachers = Teacher::get();
-        return view('admin.teacher.index', compact('teachers'));
+        $teachers = Teacher::with('classroom')->get();
+        return view('admin.teachers.index', compact('teachers'));
     }
 
     /**
@@ -41,7 +41,7 @@ class TeacherController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nip' => "required|numeric|unique:teachers,nip,$request->id",
+            'nip' => "required|numeric|unique:teachers,nip,$request->nip",
             'name' => 'required',
             'gender' => 'required',
             'phone' => 'required',
@@ -98,10 +98,10 @@ class TeacherController extends Controller
 
         $result = Teacher::findorfail($id)->delete();
         if ($result) {
-            return redirect()->back()->with('warning', 'Data wali kelas berhasil dihapus! (Silahkan cek trash data wali kelas)');
+            return redirect()->back()->with('warning', 'Data guru berhasil dihapus! (Silahkan cek trash data guru)');
         }
 
-        return redirect()->back()->with('danger', 'Data wali kelas gagal dihapus.');
+        return redirect()->back()->with('danger', 'Data guru gagal dihapus.');
     }
 
     public function trash()
@@ -115,20 +115,20 @@ class TeacherController extends Controller
         $id = Crypt::decrypt($id);
         $result = Teacher::withTrashed()->findorfail($id)->restore();
         if ($result) {
-            return redirect()->back()->with('info', 'Data wali kelas berhasil direstore! (Silahkan cek data wali kelas)');
+            return redirect()->back()->with('info', 'Data guru berhasil direstore! (Silahkan cek data guru)');
         }
 
-        return redirect()->back()->with('warning', 'Data wali kelas gagal direstore.');
+        return redirect()->back()->with('warning', 'Data guru gagal direstore.');
     }
 
     public function kill($id)
     {
         $result = Teacher::withTrashed()->findorfail($id)->forceDelete();
         if ($result) {
-            return redirect()->back()->with('success', 'Data wali kelas berhasil dihapus secara permanen');
+            return redirect()->back()->with('success', 'Data guru berhasil dihapus secara permanen');
         }
 
-        return redirect()->back()->with('warning', 'Data wali kelas gagal dihapus secara permanen');
+        return redirect()->back()->with('warning', 'Data guru gagal dihapus secara permanen');
     }
 
     public function getEdit(Request $request)

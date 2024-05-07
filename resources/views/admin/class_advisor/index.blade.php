@@ -12,10 +12,6 @@
                         data-target="#form-teachers">
                         <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Tambah Data Wali Kelas
                     </button>
-                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
-                        data-target="#importTeacherExcel">
-                        <i class="nav-icon fas fa-file-import"></i> &nbsp; IMPORT EXCEL
-                    </button>
                 </h3>
             </div>
             <!-- /.card-header -->
@@ -26,21 +22,23 @@
                             <th>No.</th>
                             <th>NUPK</th>
                             <th>Nama Wali Kelas</th>
+                            <th>Kelas</th>
                             <th>Jenis Kelamin</th>
                             <th>Nomor Telepon</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($teachers as $key => $data)
+                        @foreach ($class_advisors as $key => $data)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $data->nip }}</td>
                                 <td>{{ $data->name }}</td>
+                                <td>{{ $data->classroom->name ?? '-' }}</td>
                                 <td>{{ $data->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
                                 <td>{{ $data->phone }}</td>
                                 <td>
-                                    <form action="{{ route('teachers.destroy', $data->id) }}" method="post">
+                                    <form action="{{ route('class-advisors.destroy', $data->id) }}" method="post">
                                         @csrf
                                         @method('delete')
                                         <button type="button" class="btn btn-success btn-sm"
@@ -63,44 +61,6 @@
     </div>
     <!-- /.col -->
 
-    {{-- Import Excel Modal --}}
-    <div class="modal fade" id="importTeacherExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <form method="post" action="{{ route('teachers.import-excel') }}" enctype="multipart/form-data">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>
-                    </div>
-                    <div class="modal-body">
-                        @csrf
-                        <div class="card card-outline card-primary">
-                            <div class="card-header">
-                                <h5 class="modal-title">Petunjuk :</h5>
-                            </div>
-                            <div class="card-body">
-                                <ul>
-                                    <li>rows 1 = NUPK</li>
-                                    <li>rows 2 = Name</li>
-                                    <li>rows 3 = Gender (L/P)</li>
-                                    <li>rows 4 = Phone</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <label>Pilih file excel</label>
-                        <div class="form-group">
-                            <input type="file" name="file" required="required">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Import</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Extra large modal -->
     <div class="modal fade bd-example-modal-md" id="form-teachers" tabindex="-1" role="dialog"
         aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
@@ -113,37 +73,30 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('teachers.store') }}" method="post">
+                    <form action="{{ route('class-advisors.store') }}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="hidden" id="id" name="id">
-                                <div class="form-group" id="form_nip">
-                                    <label for="nip">NUPK</label>
-                                    <input type='text' id="nip" name='nip'
-                                        class="form-control @error('nip') is-invalid @enderror"
-                                        placeholder="{{ __('NUPK') }}">
-                                </div>
-                                <div class="form-group" id="form_name">
-                                    <label for="name">Nama Wali Kelas</label>
-                                    <input type='text' id="name" name='name'
-                                        class="form-control @error('name') is-invalid @enderror"
-                                        placeholder="{{ __('Nama Wali Kelas') }}">
-                                </div>
                                 <div class="form-group">
-                                    <label for="gender">Jenis Kelamin</label>
-                                    <select id="gender" name="gender"
-                                        class="form-control @error('gender') is-invalid @enderror">
-                                        <option value="">-- Pilih Jenis Kelamin --</option>
-                                        <option value="L">Laki-laki</option>
-                                        <option value="P">Perempuan</option>
+                                    <label for="teacher_id">Wali Kelas</label>
+                                    <select id="teacher_id" name="teacher_id"
+                                        class="select2bs4 form-control @error('teacher_id') is-invalid @enderror">
+                                        <option value="">-- Pilih Wali Kelas --</option>
+                                        @foreach ($teachers as $data)
+                                            <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group" id="form_phone">
-                                    <label for="phone">Nomor Telepon</label>
-                                    <input type='text' id="phone" name='phone'
-                                        class="form-control @error('phone') is-invalid @enderror"
-                                        placeholder="{{ __('Nomor Telepon') }}">
+                                <div class="form-group">
+                                    <label for="classroom_id">Kelas</label>
+                                    <select id="classroom_id" name="classroom_id"
+                                        class="select2bs4 form-control @error('classroom_id') is-invalid @enderror">
+                                        <option value="">-- Pilih Kelas --</option>
+                                        @foreach ($classrooms as $data)
+                                            <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -163,28 +116,68 @@
 
 @section('script')
     <script>
+        var teachersData = @json($teachers);
+        var classroomsData = @json($classrooms);
+
         function getCreate() {
             $("#judul").text('Tambah Data Wali Kelas');
             $('#id').val('');
-            $('#nip').val("{{ old('nip') }}");
-            $('#name').val("{{ old('name') }}");
-            $('#gender').val("{{ old('gender') }}");
-            $('#phone').val("{{ old('phone') }}");
+            $('#teacher_id').empty();
+            $.each(teachersData, function(index, el) {
+                if (!el.classroom) {
+                    $('#teacher_id').append($('<option>', {
+                        value: el.id,
+                        text: el.name
+                    }));
+                }
+            });
+            $('#teacher_id option').removeAttr("selected").trigger('change');
+
+            $('#classroom_id').empty();
+            $.each(classroomsData, function(index, el) {
+                if (!el.teacher) {
+                    $('#classroom_id').append($('<option>', {
+                        value: el.id,
+                        text: el.name
+                    }));
+                }
+            });
+            $('#classroom_id option').removeAttr("selected").trigger('change');
         }
 
         function getEdit(id) {
+            $('#teacher_id option').removeAttr("selected").trigger('change');
+            $('#teacher_id').empty();
+            $.each(teachersData, function(index, el) {
+                $('#teacher_id').append($('<option>', {
+                    value: el.id,
+                    text: el.name
+                }));
+            });
+
+            $('#classroom_id option').removeAttr("selected").trigger('change');
+            $('#classroom_id').empty();
+            $.each(classroomsData, function(index, el) {
+                $('#classroom_id').append($('<option>', {
+                    value: el.id,
+                    text: el.name
+                }));
+            });
+
             $.ajax({
                 type: "GET",
                 dataType: "JSON",
-                url: `{{ url('/teachers/${id}/json') }}`,
+                url: `{{ url('/class-advisors/${id}/json') }}`,
                 success: function(result) {
                     if (result) {
-                        $("#judul").text('Edit Data Wali Kelas ' + result.name);
+                        $("#judul").text('Edit Data Wali Kelas');
                         $('#id').val(result.id);
-                        $('#nip').val(result.nip);
-                        $('#name').val(result.name);
-                        $('#gender').val(result.gender);
-                        $('#phone').val(result.phone);
+                        console.log(result.teacher_id)
+                        console.log($(`#teacher_id option[value=${result.teacher_id}]`))
+                        $(`#teacher_id option[value=${result.teacher_id}]`).attr('selected', 'selected')
+                            .trigger('change');
+                        $(`#classroom_id option[value=${result.classroom_id}]`).attr('selected', 'selected')
+                            .trigger('change');
                     }
                 },
                 error: function() {
@@ -196,6 +189,6 @@
 
         $("#MasterData").addClass("active");
         $("#liMasterData").addClass("menu-open");
-        $("#DataTeachers").addClass("active");
+        $("#DataClassAdvisors").addClass("active");
     </script>
 @endsection

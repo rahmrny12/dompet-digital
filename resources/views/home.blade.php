@@ -9,22 +9,37 @@
 @section('content')
     <div class="col-md-12" id="load_content">
         <div class="row">
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-4 col-4">
               <!-- small box -->
               <div class="small-box bg-info">
                 <div class="inner">
-                  <h3>{{ $dashboard->transaction_count }}</h3>
+                  <h3>Rp. {{ number_format($dashboard->transaction_total, 0, ',', '.') }}</h3>
 
                   <p>Transaksi Hari Ini</p>
                 </div>
                 <div class="icon">
                   <i class="fas fa-wallet"></i>
                 </div>
-                <a href="{{ route('transactions.classrooms') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('transactions.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-4 col-4">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h3>Rp. {{ number_format($dashboard->service_charge_total, 0, ',', '.') }}</h3>
+
+                  <p>Biaya Layanan Hari Ini</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-wallet"></i>
+                </div>
+                <a href="{{ route('transactions.balance-report') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-4 col-4">
               <!-- small box -->
               <div class="small-box bg-success">
                 <div class="inner">
@@ -39,13 +54,13 @@
               </div>
             </div>
             <!-- ./col -->
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-4 col-4">
               <!-- small box -->
               <div class="small-box bg-warning">
                 <div class="inner">
                   <h3>{{ $dashboard->teacher_count }}</h3>
 
-                  <p>Wali Kelas</p>
+                  <p>Guru</p>
                 </div>
                 <div class="icon">
                   <i class="fas fa-user"></i>
@@ -54,7 +69,7 @@
               </div>
             </div>
             <!-- ./col -->
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-4 col-4">
               <!-- small box -->
               <div class="small-box bg-danger">
                 <div class="inner">

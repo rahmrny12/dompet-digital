@@ -31,13 +31,19 @@
                             <li class="nav-item">
                                 <a href="{{ route('teachers.index') }}" class="nav-link" id="DataTeachers">
                                     <i class="fas fa-users nav-icon"></i>
-                                    <p>Wali Kelas</p>
+                                    <p>Data Guru</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('classrooms.index') }}" class="nav-link" id="DataClassrooms">
                                     <i class="fas fa-chalkboard-teacher nav-icon"></i>
                                     <p>Data Kelas</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('class-advisors.index') }}" class="nav-link" id="DataClassAdvisors">
+                                    <i class="fas fa-users nav-icon"></i>
+                                    <p>Wali Kelas</p>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -68,16 +74,51 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('transactions.classrooms') }}" class="nav-link" id="TransactionHistory">
+                        <a href="{{ route('transactions.index') }}" class="nav-link" id="TransactionHistory">
                             <i class="nav-icon fas fa-money-check"></i>
                             <p>Histori Belanja Siswa</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('transactions.report') }}" class="nav-link" id="Report">
+                        <a href="{{ route('transactions.balance-report') }}" class="nav-link" id="Report">
                             <i class="nav-icon fas fa-file-alt"></i>
                             <p>Laporan Belanja Siswa</p>
                         </a>
+                    </li>
+                    <li class="nav-item has-treeview" id="liViewTrash">
+                        <a href="#" class="nav-link" id="ViewTrash">
+                            <i class="nav-icon fas fa-recycle"></i>
+                            <p>
+                                Lihat Trash
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview ml-4">
+                            <li class="nav-item">
+                                <a href="{{ route('teachers.trash') }}" class="nav-link" id="DataTrashTeachers">
+                                    <i class="fas fa-users nav-icon"></i>
+                                    <p>Data Guru</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('classrooms.trash') }}" class="nav-link" id="DataTrashClassrooms">
+                                    <i class="fas fa-chalkboard-teacher nav-icon"></i>
+                                    <p>Data Kelas</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('parents.trash') }}" class="nav-link" id="DataTrashParents">
+                                    <i class="fas fa-user nav-icon"></i>
+                                    <p>Data Wali Murid</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('students.trash') }}" class="nav-link" id="DataTrashStudents">
+                                    <i class="fas fa-user nav-icon"></i>
+                                    <p>Data Siswa</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('settings') }}" class="nav-link" id="Settings">

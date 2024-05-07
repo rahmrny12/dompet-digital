@@ -1,5 +1,5 @@
 @extends('template_backend.home')
-@section('heading', "Riwayat Belanja Kelas $classroom->name")
+@section('heading', "Riwayat Belanja")
 @section('page')
   <li class="breadcrumb-item active">Data Riwayat Belanja</li>
 @endsection

@@ -69,4 +69,31 @@ class UserController extends Controller
     {
         return view('user.pengaturan');
     }
+
+    public function trash()
+    {
+        $classrooms = User::onlyTrashed()->where('role', 'admin')->get();
+        return view('admin.classrooms.trash', compact('classrooms'));
+    }
+
+    public function restore($id)
+    {
+        $id = Crypt::decrypt($id);
+        $result = Classroom::withTrashed()->findorfail($id)->restore();
+        if ($result) {
+            return redirect()->back()->with('info', 'Data kelas berhasil direstore! (Silahkan cek data kelas)');
+        }
+
+        return redirect()->back()->with('warning', 'Data kelas gagal direstore.');
+    }
+
+    public function kill($id)
+    {
+        $result = Classroom::withTrashed()->findorfail($id)->forceDelete();
+        if ($result) {
+            return redirect()->back()->with('success', 'Data kelas berhasil dihapus secara permanen');
+        }
+
+        return redirect()->back()->with('warning', 'Data kelas gagal dihapus secara permanen');
+    }
 }

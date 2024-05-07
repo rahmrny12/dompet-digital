@@ -6,17 +6,25 @@
 @section('content')
     <div class="col-md-12">
         <div class="card">
-            <!-- /.card-header -->
             <div class="card-body">
                 <form action="" method="get">
                     <div class="d-flex justify-content-end align-items-center">
+                        <div class="form-group">
+                            <a href="{{ route('transactions.balance-report.print', [
+                                'from_date' => request('from_date') ?: now()->format('Y-m-d'),
+                                'to_date' => request('to_date') ?: now()->format('Y-m-d'),
+                            ]) }}"
+                                class="btn btn-primary float-right" target="_blank">
+                                <i class="nav-icon fas fa-print"></i> &nbsp; Cetak
+                            </a>
+                        </div>
                         <div class="mb-3 ml-3 px-0">
                             <input type='date' value="{{ request('from_date') ?: now()->format('Y-m-d') }}"
                                 id="from_date" name='from_date' class="form-control">
                         </div>
                         <div class="mb-3 ml-3 px-0">
-                            <input type='date' value="{{ request('to_date') ?: now()->format('Y-m-d') }}"
-                                id="to_date" name='to_date' class="form-control">
+                            <input type='date' value="{{ request('to_date') ?: now()->format('Y-m-d') }}" id="to_date"
+                                name='to_date' class="form-control">
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary ml-3 px-3">Filter</button>

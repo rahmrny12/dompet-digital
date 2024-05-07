@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Crypt;
 
 class StudentParentController extends Controller
 {
@@ -46,8 +47,7 @@ class StudentParentController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'phone' => 'required',
-            'email' => "required|unique:student_parents,email,$request->id",
+            'email' => "nullable|sometimes|unique:student_parents,email,$request->email",
             'username' => 'required',
         ]);
 
@@ -178,7 +178,7 @@ class StudentParentController extends Controller
                 Student::where('parent_id', $id)->update(['parent_id' => null]);
 
             $parent = StudentParent::findorfail($id);
-            User::where('email', $parent->email)->delete();
+            User::findOrFail($parent->user_id)->delete();
             $parent->delete();
 
             return redirect()->back()->with('warning', 'Data wali murid berhasil dihapus! (Silahkan cek trash data wali murid)');
@@ -195,23 +195,41 @@ class StudentParentController extends Controller
 
     public function restore($id)
     {
-        $id = Crypt::decrypt($id);
-        $result = StudentParent::withTrashed()->findorfail($id)->restore();
-        if ($result) {
+        try {
+            DB::beginTransaction();
+
+            $id = Crypt::decrypt($id);
+            $parent = StudentParent::withTrashed()->findOrFail($id);
+            User::withTrashed()->findOrFail($parent->user_id)->restore();
+            $parent->restore();
+
+            DB::commit();
+
             return redirect()->back()->with('info', 'Data wali murid berhasil direstore! (Silahkan cek data wali murid)');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('warning', 'Data wali murid gagal direstore.');
         }
 
-        return redirect()->back()->with('warning', 'Data wali murid gagal direstore.');
     }
 
     public function kill($id)
     {
-        $result = StudentParent::withTrashed()->findorfail($id)->forceDelete();
-        if ($result) {
-            return redirect()->back()->with('success', 'Data wali murid berhasil dihapus secara permanen');
-        }
+        try {
+            DB::beginTransaction();
 
-        return redirect()->back()->with('warning', 'Data wali murid gagal dihapus secara permanen');
+            $id = Crypt::decrypt($id);
+            $parent = StudentParent::withTrashed()->findOrFail($id);
+            $parent->forceDelete();
+            User::withTrashed()->findOrFail($parent->user_id)->forceDelete();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Data wali murid berhasil dihapus secara permanen.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('warning', 'Data wali murid gagal dihapus secara permanen.');
+        }
     }
 
     public function getEdit(Request $request)
