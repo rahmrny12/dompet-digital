@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Classroom;
 use App\Models\Teacher;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\TeacherImport;
+use App\Exports\TeacherExport;
 
 class TeacherController extends Controller
 {
@@ -147,5 +149,11 @@ class TeacherController extends Controller
         $file->move('excel_file/teacher', $nama_file);
         Excel::import(new TeacherImport, public_path('/excel_file/teacher/' . $nama_file));
         return redirect()->back()->with('success', 'Data Kelas Berhasil Diimport!');
+    }
+
+    public function exportExcel()
+    {
+        $date = Carbon::now()->toDateString();
+        return Excel::download(new TeacherExport(), "data-guru-$date.xlsx");
     }
 }

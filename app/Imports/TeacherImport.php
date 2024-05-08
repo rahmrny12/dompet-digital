@@ -2,13 +2,21 @@
 
 namespace App\Imports;
 
-use App\Models\StudentParent;
-use App\Models\User;
 use App\Models\Teacher;
+use App\Models\Classroom;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class TeacherImport implements ToModel
+class TeacherImport implements ToModel, WithStartRow
 {
+    /**
+     * @return int
+     */
+    public function startRow(): int
+    {
+        return 2;
+    }
+
     /**
      * @param array $row
      *

@@ -33,7 +33,8 @@
                 <strong>Copyright &copy;
                     <script>
                         document.write(new Date().getFullYear());
-                    </script> &diams; <a href="http://piramidsoft.com/" style="color: white;">SD Kreatif</a>.
+                    </script> &diams; <a href="http://piramidsoft.com/" style="color: white;">SD
+                        Kreatif</a>.
                 </strong>
             </marquee>
         </footer>
@@ -149,6 +150,67 @@
             toastr.error("{{ Session('error') }}");
         </script>
     @endif
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+    https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1F9wrTsppnewkExUNNQ3siuYPYOopwno",
+            authDomain: "dompet-digital-76471.firebaseapp.com",
+            databaseURL: "https://dompet-digital-76471-default-rtdb.firebaseio.com",
+            projectId: "dompet-digital-76471",
+            storageBucket: "dompet-digital-76471.appspot.com",
+            messagingSenderId: "941266358587",
+            appId: "1:941266358587:web:cb5f29b9d9c07a1ab2e71e"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        const messaging = firebase.messaging();
+
+        function initFirebaseMessagingRegistration() {
+            messaging.requestPermission().then(function() {
+                return messaging.getToken()
+            }).then(function(token) {
+                axios.post("{{ route('fcmToken') }}", {
+                    _method: "PATCH",
+                    token
+                }).then(({
+                    data
+                }) => {
+                    console.log(data)
+                }).catch(({
+                    response: {
+                        data
+                    }
+                }) => {
+                    console.error(data)
+                })
+
+            }).catch(function(err) {
+                console.log(`Token Error :: ${err}`);
+            });
+        }
+
+        initFirebaseMessagingRegistration();
+
+        messaging.onMessage(function({
+            data: {
+                body,
+                title
+            }
+        }) {
+            new Notification(title, {
+                body
+            });
+        });
+    </script>
 </body>
 
 </html>

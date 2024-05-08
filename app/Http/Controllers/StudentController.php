@@ -177,8 +177,8 @@ class StudentController extends Controller
     {
         $this->validate($request, [
             'id' => 'required',
-            'daily_limit' => 'required',
-            'max_limit' => 'required',
+            'daily_limit' => 'nullable',
+            'max_limit' => 'nullable',
         ]);
 
         BalanceSetting::updateOrCreate(
@@ -186,8 +186,8 @@ class StudentController extends Controller
                 'student_id' => $request->id
             ],
             [
-                'daily_limit' => $request->daily_limit,
-                'max_limit' => $request->max_limit,
+                'daily_limit' => $request->daily_limit ?? 0,
+                'max_limit' => $request->max_limit ?? 0,
             ]
         );
 
@@ -259,6 +259,30 @@ class StudentController extends Controller
     public function exportExcel()
     {
         $date = Carbon::now()->toDateString();
-        return Excel::download(new StudentExport(), "data-absensi-guru-$date.xlsx");
+        return Excel::download(new StudentExport(), "data-siswa-$date.xlsx");
+    }
+
+    public function changeClass(Request $request)
+    {
+        $this->validate($request, [
+            'classroom_id' => 'required',
+            'student_id' => 'required',
+        ]);
+
+        Student::whereIn('id', $request->student_id)->update([
+            'classroom_id' => $request->classroom_id
+        ]);
+
+        return redirect()->back()->with('success', 'Data kelas untuk siswa berhasil diperbarui!');
+    }
+
+    public function getStudentsJson(Request $request)
+    {
+        $students = Student::select('students.id', 'classrooms.name as classroom', 'students.nisn', 'students.name', 'students.gender')
+            ->join('classrooms', 'classrooms.id', 'students.classroom_id')
+            ->OrderBy('name', 'asc')->where('classroom_id', $request->id)->get();
+
+
+        return response()->json($students);
     }
 }

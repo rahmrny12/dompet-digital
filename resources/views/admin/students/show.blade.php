@@ -36,7 +36,7 @@
                     <div class="col-md-5">
                         <div class="d-flex flex-column align-items-end">
                             {!! QrCode::size(256)->generate($student->nisn) !!}
-{{--
+                            {{--
                             <a href="{{ route('students.qr-code', $student->id) }}" class="btn btn-info btn-sm mt-4 mb-2 px-4">
                                 <i class="nav-icon fas fa-qrcode"></i> &nbsp; Download
                             </a> --}}
@@ -89,39 +89,39 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                                    class='nav-icon fas fa-arrow-left'></i> &nbsp; Kembali</button>
+                            <button type="submit" class="btn btn-primary"><i class="nav-icon fas fa-save"></i> &nbsp;
+                                Simpan</button>
+                        </div>
                     </form>
                 </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
-                            class='nav-icon fas fa-arrow-left'></i> &nbsp; Kembali</button>
-                    <button type="submit" class="btn btn-primary"><i class="nav-icon fas fa-save"></i> &nbsp;
-                        Simpan</button>
-                </div>
             </div>
-        </div>
-    @endsection
-    @section('script')
-        <script>
-            function getBalanceSetting(id) {
-                $.ajax({
-                    type: "GET",
-                    dataType: "JSON",
-                    url: `{{ url('/students/${id}/setting') }}`,
-                    success: function(result) {
-                        if (result) {
-                            $('#daily_limit').val(result.balance_setting.daily_limit);
-                            $('#max_limit').val(result.balance_setting.max_limit);
-                        }
-                    },
-                    error: function(err) {
-                        console.log(err)
-                    },
-                    complete: function() {}
-                });
-            }
+        @endsection
+        @section('script')
+            <script>
+                function getBalanceSetting(id) {
+                    $.ajax({
+                        type: "GET",
+                        dataType: "JSON",
+                        url: `{{ url('/students/${id}/setting') }}`,
+                        success: function(result) {
+                            if (result) {
+                                $('#daily_limit').val(result.balance_setting.daily_limit);
+                                $('#max_limit').val(result.balance_setting.max_limit);
+                            }
+                        },
+                        error: function(err) {
+                            console.log(err)
+                        },
+                        complete: function() {}
+                    });
+                }
 
-            $("#MasterData").addClass("active");
-            $("#liMasterData").addClass("menu-open");
-            $("#DataStudents").addClass("active");
-        </script>
-    @endsection
+                $("#MasterData").addClass("active");
+                $("#liMasterData").addClass("menu-open");
+                $("#DataStudents").addClass("active");
+            </script>
+        @endsection

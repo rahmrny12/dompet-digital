@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+    Route::post('/students/class/change', [StudentController::class, 'changeClass'])->name('students.change-class');
     Route::post(
         '/students/import-excel',
         [StudentController::class, 'importExcel']
@@ -54,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('student/qr-code/{id}/students', [StudentController::class, 'qrCodeAll'])->name('students.qr-code.all');
     Route::get('student/qr-code/{id}/students/print', [StudentController::class, 'printQrCodeAll'])->name('students.qr-code.all.print');
 
+    Route::get('/students/all/json', [StudentController::class, 'getStudentsJson']);
     Route::get('/students/{id}/json', [StudentController::class, 'getEdit']);
     Route::get('/classrooms/{id}/students/json', [StudentController::class, 'getStudentsByClassroom']);
     Route::get('/students/{id}/setting', [StudentController::class, 'getBalanceSetting']);
@@ -67,6 +69,10 @@ Route::middleware(['auth'])->group(function () {
         '/teachers/import-excel',
         [TeacherController::class, 'importExcel']
     )->name('teachers.import-excel');
+    Route::get(
+        '/teachers/excel/export',
+        [TeacherController::class, 'exportExcel']
+    )->name('teachers.export-excel');
 
     /* --- */
     Route::resource('/parents', StudentParentController::class);

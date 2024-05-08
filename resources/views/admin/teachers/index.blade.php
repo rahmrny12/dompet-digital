@@ -12,6 +12,8 @@
                         data-target="#form-teachers">
                         <i class="nav-icon fas fa-folder-plus"></i> &nbsp; Tambah Data Guru
                     </button>
+                    <a href="{{ route('teachers.export-excel') }}" class="btn btn-success btn-sm my-3"
+                        target="_blank"><i class="nav-icon fas fa-file-export"></i> &nbsp; EXPORT EXCEL</a>
                     <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
                         data-target="#importTeacherExcel">
                         <i class="nav-icon fas fa-file-import"></i> &nbsp; IMPORT EXCEL
@@ -83,9 +85,9 @@
                             <div class="card-body">
                                 <ul>
                                     <li>rows 1 = NUPK</li>
-                                    <li>rows 2 = Name</li>
-                                    <li>rows 3 = Gender (L/P)</li>
-                                    <li>rows 4 = Phone</li>
+                                    <li>rows 2 = Nama</li>
+                                    <li>rows 3 = Jenis Kelamin (L/P)</li>
+                                    <li>rows 4 = Nomor Telepon</li>
                                 </ul>
                             </div>
                         </div>

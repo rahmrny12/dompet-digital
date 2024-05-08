@@ -10,9 +10,18 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Exception;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class StudentImport implements ToModel
+class StudentImport implements ToModel, WithStartRow
 {
+    /**
+     * @return int
+     */
+    public function startRow(): int
+    {
+        return 2;
+    }
+
     /**
      * @param array $row
      *
