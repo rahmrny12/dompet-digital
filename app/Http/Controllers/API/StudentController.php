@@ -39,7 +39,7 @@ class StudentController extends Controller
         $user_id = auth()->user()->id;
         $parent = StudentParent::where('user_id', $user_id)->first();
 
-        $students = Student::where('parent_id', $parent->id)->get();
+        $students = Student::with('classroom')->where('parent_id', $parent->id)->get();
 
         if (count($students) == 0)
             return response()->json([

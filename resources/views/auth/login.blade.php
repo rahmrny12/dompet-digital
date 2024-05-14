@@ -25,9 +25,9 @@
                 <input id="password" type="password" placeholder="{{ __('Password') }}"
                     class="form-control @error('password') is-invalid @enderror" name="password"
                     autocomplete="current-password">
-                <div class="input-group-append">
+                <div class="input-group-append" id="toggle-password" style="cursor: pointer">
                     <div class="input-group-text">
-                        <span class="fas fa-lock"></span>
+                        <span class="fas fa-eye"></span>
                     </div>
                 </div>
                 @error('password')
@@ -69,6 +69,27 @@
 @endsection
 @section('script')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.getElementById('toggle-password');
+            const passwordField = document.getElementById('password');
+
+            togglePassword.addEventListener('click', function() {
+                const icon = this.querySelector('span');
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+
+                // Toggle eye icon
+                if (type === 'password') {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+        });
+
+        
         // $("#email").keyup(function() {
         //     var email = $("#email").val();
 

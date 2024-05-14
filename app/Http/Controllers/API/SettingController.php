@@ -11,7 +11,7 @@ class SettingController extends Controller
 {
     public function show()
     {
-        $setting = Setting::first();
+        $setting = Setting::select('service_charge', 'admin_phone_number')->first();
 
         if ($setting)
             return response()->json([
@@ -30,18 +30,32 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'service_charge' => 'required',
+            'service_charge' => 'nullable',
+            'admin_phone_number' => 'nullable',
         ]);
 
         $exist = Setting::exists();
 
         if ($exist) {
-            Setting::query()->update(['service_charge' => $request->service_charge]);
+            $updates = [];
+
+            if ($request->has('service_charge')) {
+                $updates['service_charge'] = $request->service_charge;
+            }
+
+            if ($request->has('admin_phone_number')) {
+                $updates['admin_phone_number'] = $request->admin_phone_number;
+            }
+
+            Setting::query()->update($updates);
         } else {
-            Setting::create(['service_charge' => $request->service_charge]);
+            Setting::create([
+                'service_charge' => $request->service_charge,
+                'admin_phone_number' => $request->admin_phone_number
+            ]);
         }
 
-        $setting = Setting::first();
+        $setting = Setting::select('service_charge', 'admin_phone_number')->first();
 
         return response()->json([
             'data' => $setting,
