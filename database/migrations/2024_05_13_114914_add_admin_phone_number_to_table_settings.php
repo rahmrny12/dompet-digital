@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->string('admin_phone_number');
+            $table->string('admin_phone_number')->nullable();
         });
     }
 

@@ -33,7 +33,6 @@ Route::middleware(['auth:api'])->group(function () {
         /* --- */
         Route::post('/transactions', [TransactionController::class, 'store']);
         /* --- */
-        Route::get('/settings', [SettingController::class, 'show']);
         Route::post('/settings', [SettingController::class, 'store']);
     });
 
@@ -41,6 +40,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/announcement', [DashboardController::class, 'announcement']);
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::get('/service-charge', [SettingController::class, 'getServiceCharge']);
+    Route::get('/settings', [SettingController::class, 'show']);
 
     Route::middleware(['role:parent'])->group(function () {
         /* --- */
