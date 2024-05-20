@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 // use App\Notifications\PushNotification;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
