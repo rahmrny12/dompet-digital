@@ -11,9 +11,8 @@ use App\Models\Classroom;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-// use Kreait\Firebase\Messaging\CloudMessage;
-// use Kreait\Firebase\Messaging\Notification;
-use App\Notifications\PushNotification;
+// use App\Notifications\PushNotification;
+use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {
@@ -24,12 +23,6 @@ class HomeController extends Controller
 
     public function index()
     {
-        // $message = CloudMessage::withTarget('topic', 'pengumuman')
-        //     ->withNotification(Notification::create('Pengumuman Baru', 'Ada pengumuman baru di situs web'));
-
-        // $firebase = app('firebase.messaging');
-        // $firebase->send($message);
-
         $user = auth()->user();
 
         $announcement = Announcement::first();
@@ -59,7 +52,9 @@ class HomeController extends Controller
             'content' => 'required',
         ]);
 
-        Announcement::updateOrCreate(
+        $user = auth()->user();
+        
+        $result = Announcement::updateOrCreate(
             [
                 'id' => $request->id
             ],
@@ -68,50 +63,34 @@ class HomeController extends Controller
             ]
         );
 
-        return redirect()->route('home')->with('success', 'Data pengumuman berhasil diperbarui!');
-    }
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $serverKey = 'key=' . env("FIREBASE_FCM_SERVER_KEY");
 
-    public function notification(Request $request){
-        $request->validate([
-            'title'=>'required',
-            'message'=>'required'
-        ]);
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Authorization' => $serverKey,
+            ])->post($url, [
+                'to' => '/topics/announcement-all',
+                'android' => [
+                    'priority' => 'high',
+                ],
+                'data' => [
+                    'title' => 'Dompet Digital Pengumuman',
+                    'body' => strip_tags($result->content),
+                    'extra' => [
+                        'type' => 'announcement',
+                        'path' => '/announcement',
+                    ],
+                ],
+            ])->throw();
 
-        try{
-            $fcmTokens = User::whereNotNull('fcm_token')->pluck('fcm_token')->toArray();
-
-            //Notification::send(null,new SendPushNotification($request->title,$request->message,$fcmTokens));
-
-            /* or */
-
-            //auth()->user()->notify(new SendPushNotification($title,$message,$fcmTokens));
-
-            /* or */
-
-            Larafirebase::withTitle($request->title)
-                ->withBody($request->message)
-                ->sendMessage($fcmTokens);
-
-            return redirect()->back()->with('success','Notification Sent Successfully!!');
-
-        }catch(\Exception $e){
-            report($e);
-            return redirect()->back()->with('error','Something goes wrong while sending notification.');
+            if ($response->successful()) {
+                return redirect()->route('home')->with('success', 'Data pengumuman berhasil diperbarui!');
+            }
+        } catch (\Exception $e) {
+            Log::error('FCM Notification Error: ' . $e->getMessage());
+            return redirect()->route('home')->with('warning', 'Data pengumuman gagal diperbarui!');
         }
     }
-
-    public function updateToken(Request $request){
-        try{
-            $request->user()->update(['fcm_token'=>$request->token]);
-            return response()->json([
-                'success'=>true
-            ]);
-        }catch(\Exception $e){
-            report($e);
-            return response()->json([
-                'success'=>false
-            ],500);
-        }
-    }
-
 }
