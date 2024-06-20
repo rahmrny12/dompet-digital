@@ -74,6 +74,7 @@ class StudentBalanceController extends Controller
         $recharge = RechargeHistory::with('student')
             ->whereDate('created_at', '>=', $from_date)
             ->whereDate('created_at', '<=', $to_date)
+            ->orderByDesc('created_at')
             ->get();
 
         return view('admin.transactions.balance_report', compact('recharge'));
